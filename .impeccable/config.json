@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "retail_media/report.html"
+        ],
+        "createdAt": "2026-10-26T00:15:55.261Z",
+        "reason": "Agent reviewed rendered table: table-wrap intentionally contains a collapsed full-width table; th and td have 14px 16px padding, measured text inset is 17px left and 16px top. Mobile table scrolls within the wrapper without page overflow."
+      }
+    ]
+  }
+}

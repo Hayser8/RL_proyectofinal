@@ -1,0 +1,15 @@
+{
+  "sessions": 1000,
+  "campaign_days": 30,
+  "block_size": 20,
+  "sponsored_slots": [3, 4, 5, 6, 11, 12, 13, 14],
+  "categories": ["Tecnología", "Hogar", "Deporte"],
+  "brands": [
+    {"name": "Nova", "budget_cents": 400000, "cpc_cents": 120},
+    {"name": "Casa", "budget_cents": 250000, "cpc_cents": 100},
+    {"name": "Pulse", "budget_cents": 150000, "cpc_cents": 80}
+  ],
+  "cvr_tolerance": 0.0,
+  "minimum_delivery": 0.9,
+  "pacing_slack": 0.075
+}

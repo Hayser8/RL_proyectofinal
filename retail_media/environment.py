@@ -10,8 +10,14 @@ from .config import Config
 
 
 class RetailMediaEnv:
-    def __init__(self, config: Config, seed=0, cvr_multiplier=0.0):
+    def __init__(self, config: Config, seed=0, cvr_multiplier=0.0, budget_cents=None):
         self.config = config.validate()
+        if budget_cents is None:
+            budget_cents = [b['budget_cents'] // config.campaign_days for b in config.brands]
+        if (not isinstance(budget_cents, (list, tuple)) or len(budget_cents) != 3
+                or any(type(v) is not int or not 0 <= v <= b['budget_cents']
+                       for v, b in zip(budget_cents, config.brands))):
+            raise ValueError('La asignación debe contener tres importes enteros dentro del presupuesto de campaña')
         self.rng = np.random.default_rng(seed)
         self.cvr_multiplier = cvr_multiplier
         self.products = [
@@ -19,7 +25,7 @@ class RetailMediaEnv:
              'quality': v, 'name': f'{config.brands[b]["name"]} · {config.categories[c]} {"Plus" if v else "Esencial"}'}
             for b in range(3) for c in range(3) for v in range(2)
         ]
-        self.budgets = np.array([b['budget_cents'] // config.campaign_days for b in config.brands], dtype=np.int64)
+        self.budgets = np.array(budget_cents, dtype=np.int64)
         self.spent = np.zeros(3, dtype=np.int64)
         self.brand_impressions = np.zeros(3, dtype=np.int64)
         self.brand_clicks = np.zeros(3, dtype=np.int64)

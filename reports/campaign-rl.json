@@ -1,0 +1,2509 @@
+{
+  "config": {
+    "sessions": 1000,
+    "campaign_days": 30,
+    "block_size": 20,
+    "sponsored_slots": [
+      3,
+      4,
+      5,
+      6,
+      11,
+      12,
+      13,
+      14
+    ],
+    "categories": [
+      "Tecnología",
+      "Hogar",
+      "Deporte"
+    ],
+    "brands": [
+      {
+        "name": "Nova",
+        "budget_cents": 400000,
+        "cpc_cents": 120
+      },
+      {
+        "name": "Casa",
+        "budget_cents": 250000,
+        "cpc_cents": 100
+      },
+      {
+        "name": "Pulse",
+        "budget_cents": 150000,
+        "cpc_cents": 80
+      }
+    ],
+    "cvr_tolerance": 0.0,
+    "minimum_delivery": 0.9,
+    "pacing_slack": 0.075
+  },
+  "policy": "rl",
+  "seeds": [
+    40000,
+    40001,
+    40002,
+    40003,
+    40004,
+    40005,
+    40006,
+    40007,
+    40008,
+    40009,
+    40010,
+    40011,
+    40012,
+    40013,
+    40014,
+    40015,
+    40016,
+    40017,
+    40018,
+    40019,
+    40020,
+    40021,
+    40022,
+    40023,
+    40024,
+    40025,
+    40026,
+    40027,
+    40028,
+    40029
+  ],
+  "sessions_per_day": [
+    0,
+    150,
+    450,
+    1000,
+    1400,
+    1600,
+    1000,
+    950,
+    1100,
+    1000,
+    900,
+    1200,
+    1400,
+    1000,
+    900,
+    1050,
+    1000,
+    1150,
+    1300,
+    1400,
+    1000,
+    1000,
+    900,
+    1100,
+    950,
+    1200,
+    1400,
+    1000,
+    1200,
+    1500
+  ],
+  "model_metadata": {
+    "training_seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161
+    ],
+    "episodes": 120,
+    "training_sessions_per_episode": 1000,
+    "seed": 42,
+    "config": {
+      "sessions": 1000,
+      "campaign_days": 30,
+      "block_size": 20,
+      "sponsored_slots": [
+        3,
+        4,
+        5,
+        6,
+        11,
+        12,
+        13,
+        14
+      ],
+      "categories": [
+        "Tecnología",
+        "Hogar",
+        "Deporte"
+      ],
+      "brands": [
+        {
+          "name": "Nova",
+          "budget_cents": 400000,
+          "cpc_cents": 120
+        },
+        {
+          "name": "Casa",
+          "budget_cents": 250000,
+          "cpc_cents": 100
+        },
+        {
+          "name": "Pulse",
+          "budget_cents": 150000,
+          "cpc_cents": 80
+        }
+      ],
+      "cvr_tolerance": 0.0,
+      "minimum_delivery": 0.9,
+      "pacing_slack": 0.075
+    },
+    "version": 2,
+    "config_fingerprint": "94a1e95fa1155587198ea6e70316a2056923d24e8d7f759129b0bc44ca80bdb0",
+    "actions": 19,
+    "alpha": 0.01,
+    "gamma": 0.8,
+    "cvr_multiplier": 132.39999999999998,
+    "state_schema": "intent_depth_v1"
+  },
+  "evaluation_mode": "single_continuous_campaign",
+  "days": [
+    {
+      "day": 1,
+      "allocation_cents": [
+        13333,
+        8333,
+        5000
+      ],
+      "target_cents": [
+        13333,
+        8333,
+        5000
+      ],
+      "spend_cents": [
+        0,
+        0,
+        0
+      ],
+      "cumulative_spend_cents": [
+        0,
+        0,
+        0
+      ],
+      "carryover_cents": [
+        13333,
+        8333,
+        5000
+      ],
+      "remaining_cents": [
+        400000,
+        250000,
+        150000
+      ],
+      "seed": 40000,
+      "metrics": {
+        "sessions": 0,
+        "converted_sessions": 0,
+        "organic_converted_sessions": 0,
+        "session_cvr": null,
+        "organic_session_cvr": null,
+        "spend_cents": [
+          0,
+          0,
+          0
+        ],
+        "sponsored_clicks": 0,
+        "sponsored_impressions": 0
+      }
+    },
+    {
+      "day": 2,
+      "allocation_cents": [
+        26666,
+        16666,
+        10000
+      ],
+      "target_cents": [
+        26666,
+        16666,
+        10000
+      ],
+      "spend_cents": [
+        2760,
+        1700,
+        1040
+      ],
+      "cumulative_spend_cents": [
+        2760,
+        1700,
+        1040
+      ],
+      "carryover_cents": [
+        23906,
+        14966,
+        8960
+      ],
+      "remaining_cents": [
+        397240,
+        248300,
+        148960
+      ],
+      "seed": 40001,
+      "metrics": {
+        "sessions": 150,
+        "product_impressions": 5060,
+        "sponsored_opportunities": 2024,
+        "sponsored_impressions": 1883,
+        "sponsored_clicks": 53,
+        "session_cvr": 0.1,
+        "organic_session_cvr": 0.12666666666666668,
+        "item_cvr": 0.0035573122529644267,
+        "sponsored_ctr": 0.028146574614976102,
+        "ad_fill_rate": 0.9303359683794467,
+        "spend_cents": [
+          2760,
+          1700,
+          1040
+        ],
+        "daily_budget_cents": [
+          26666,
+          16666,
+          10000
+        ],
+        "brand_impressions": [
+          810,
+          531,
+          542
+        ],
+        "brand_clicks": [
+          23,
+          17,
+          13
+        ],
+        "brand_delivery": [
+          0.10350258756468912,
+          0.10200408016320653,
+          0.104
+        ],
+        "pacing_forced_share": 0.7169410515135423,
+        "converted_sessions": 15,
+        "organic_converted_sessions": 19
+      }
+    },
+    {
+      "day": 3,
+      "allocation_cents": [
+        37240,
+        23300,
+        13960
+      ],
+      "target_cents": [
+        40000,
+        25000,
+        15000
+      ],
+      "spend_cents": [
+        8760,
+        5600,
+        3360
+      ],
+      "cumulative_spend_cents": [
+        11520,
+        7300,
+        4400
+      ],
+      "carryover_cents": [
+        28480,
+        17700,
+        10600
+      ],
+      "remaining_cents": [
+        388480,
+        242700,
+        145600
+      ],
+      "seed": 40002,
+      "metrics": {
+        "sessions": 450,
+        "product_impressions": 14100,
+        "sponsored_opportunities": 5640,
+        "sponsored_impressions": 5307,
+        "sponsored_clicks": 171,
+        "session_cvr": 0.08666666666666667,
+        "organic_session_cvr": 0.09111111111111111,
+        "item_cvr": 0.003120567375886525,
+        "sponsored_ctr": 0.0322215941209723,
+        "ad_fill_rate": 0.9409574468085107,
+        "spend_cents": [
+          8760,
+          5600,
+          3360
+        ],
+        "daily_budget_cents": [
+          37240,
+          23300,
+          13960
+        ],
+        "brand_impressions": [
+          2506,
+          1696,
+          1105
+        ],
+        "brand_clicks": [
+          73,
+          56,
+          42
+        ],
+        "brand_delivery": [
+          0.23523093447905477,
+          0.24034334763948498,
+          0.24068767908309455
+        ],
+        "pacing_forced_share": 0.6990766911626154,
+        "converted_sessions": 39,
+        "organic_converted_sessions": 41
+      }
+    },
+    {
+      "day": 4,
+      "allocation_cents": [
+        41813,
+        26033,
+        15600
+      ],
+      "target_cents": [
+        53333,
+        33333,
+        20000
+      ],
+      "spend_cents": [
+        18240,
+        11400,
+        6800
+      ],
+      "cumulative_spend_cents": [
+        29760,
+        18700,
+        11200
+      ],
+      "carryover_cents": [
+        23573,
+        14633,
+        8800
+      ],
+      "remaining_cents": [
+        370240,
+        231300,
+        138800
+      ],
+      "seed": 40003,
+      "metrics": {
+        "sessions": 1000,
+        "product_impressions": 31640,
+        "sponsored_opportunities": 12656,
+        "sponsored_impressions": 11838,
+        "sponsored_clicks": 351,
+        "session_cvr": 0.103,
+        "organic_session_cvr": 0.11,
+        "item_cvr": 0.003603034134007585,
+        "sponsored_ctr": 0.029650278763304613,
+        "ad_fill_rate": 0.9353666245259166,
+        "spend_cents": [
+          18240,
+          11400,
+          6800
+        ],
+        "daily_budget_cents": [
+          41813,
+          26033,
+          15600
+        ],
+        "brand_impressions": [
+          5139,
+          4346,
+          2353
+        ],
+        "brand_clicks": [
+          152,
+          114,
+          85
+        ],
+        "brand_delivery": [
+          0.43622796737856645,
+          0.4379057350286175,
+          0.4358974358974359
+        ],
+        "pacing_forced_share": 0.7028214225375908,
+        "converted_sessions": 103,
+        "organic_converted_sessions": 110
+      }
+    },
+    {
+      "day": 5,
+      "allocation_cents": [
+        36906,
+        22966,
+        13800
+      ],
+      "target_cents": [
+        66666,
+        41666,
+        25000
+      ],
+      "spend_cents": [
+        25440,
+        15800,
+        9520
+      ],
+      "cumulative_spend_cents": [
+        55200,
+        34500,
+        20720
+      ],
+      "carryover_cents": [
+        11466,
+        7166,
+        4280
+      ],
+      "remaining_cents": [
+        344800,
+        215500,
+        129280
+      ],
+      "seed": 40004,
+      "metrics": {
+        "sessions": 1400,
+        "product_impressions": 44200,
+        "sponsored_opportunities": 17680,
+        "sponsored_impressions": 16521,
+        "sponsored_clicks": 489,
+        "session_cvr": 0.07714285714285714,
+        "organic_session_cvr": 0.085,
+        "item_cvr": 0.0026244343891402714,
+        "sponsored_ctr": 0.029598692573088795,
+        "ad_fill_rate": 0.9344457013574661,
+        "spend_cents": [
+          25440,
+          15800,
+          9520
+        ],
+        "daily_budget_cents": [
+          36906,
+          22966,
+          13800
+        ],
+        "brand_impressions": [
+          7187,
+          5629,
+          3705
+        ],
+        "brand_clicks": [
+          212,
+          158,
+          119
+        ],
+        "brand_delivery": [
+          0.6893188099496017,
+          0.6879735260820343,
+          0.6898550724637681
+        ],
+        "pacing_forced_share": 0.6910598632044065,
+        "converted_sessions": 108,
+        "organic_converted_sessions": 119
+      }
+    },
+    {
+      "day": 6,
+      "allocation_cents": [
+        24800,
+        15500,
+        9280
+      ],
+      "target_cents": [
+        80000,
+        50000,
+        30000
+      ],
+      "spend_cents": [
+        24480,
+        15500,
+        9280
+      ],
+      "cumulative_spend_cents": [
+        79680,
+        50000,
+        30000
+      ],
+      "carryover_cents": [
+        320,
+        0,
+        0
+      ],
+      "remaining_cents": [
+        320320,
+        200000,
+        120000
+      ],
+      "seed": 40005,
+      "metrics": {
+        "sessions": 1600,
+        "product_impressions": 51620,
+        "sponsored_opportunities": 20648,
+        "sponsored_impressions": 13890,
+        "sponsored_clicks": 475,
+        "session_cvr": 0.111875,
+        "organic_session_cvr": 0.115,
+        "item_cvr": 0.0037194885703215807,
+        "sponsored_ctr": 0.03419726421886249,
+        "ad_fill_rate": 0.6727043781480047,
+        "spend_cents": [
+          24480,
+          15500,
+          9280
+        ],
+        "daily_budget_cents": [
+          24800,
+          15500,
+          9280
+        ],
+        "brand_impressions": [
+          5225,
+          5145,
+          3520
+        ],
+        "brand_clicks": [
+          204,
+          155,
+          116
+        ],
+        "brand_delivery": [
+          0.9870967741935484,
+          1.0,
+          1.0
+        ],
+        "pacing_forced_share": 0.1279337652987761,
+        "converted_sessions": 179,
+        "organic_converted_sessions": 184
+      }
+    },
+    {
+      "day": 7,
+      "allocation_cents": [
+        13653,
+        8333,
+        5000
+      ],
+      "target_cents": [
+        93333,
+        58333,
+        35000
+      ],
+      "spend_cents": [
+        13560,
+        8300,
+        4960
+      ],
+      "cumulative_spend_cents": [
+        93240,
+        58300,
+        34960
+      ],
+      "carryover_cents": [
+        93,
+        33,
+        40
+      ],
+      "remaining_cents": [
+        306760,
+        191700,
+        115040
+      ],
+      "seed": 40006,
+      "metrics": {
+        "sessions": 1000,
+        "product_impressions": 32520,
+        "sponsored_opportunities": 13008,
+        "sponsored_impressions": 6848,
+        "sponsored_clicks": 258,
+        "session_cvr": 0.111,
+        "organic_session_cvr": 0.103,
+        "item_cvr": 0.0036285362853628535,
+        "sponsored_ctr": 0.037675233644859814,
+        "ad_fill_rate": 0.5264452644526445,
+        "spend_cents": [
+          13560,
+          8300,
+          4960
+        ],
+        "daily_budget_cents": [
+          13653,
+          8333,
+          5000
+        ],
+        "brand_impressions": [
+          2434,
+          2711,
+          1703
+        ],
+        "brand_clicks": [
+          113,
+          83,
+          62
+        ],
+        "brand_delivery": [
+          0.993188310261481,
+          0.9960398415936638,
+          0.992
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 111,
+        "organic_converted_sessions": 103
+      }
+    },
+    {
+      "day": 8,
+      "allocation_cents": [
+        13426,
+        8366,
+        5040
+      ],
+      "target_cents": [
+        106666,
+        66666,
+        40000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        5040
+      ],
+      "cumulative_spend_cents": [
+        106560,
+        66600,
+        40000
+      ],
+      "carryover_cents": [
+        106,
+        66,
+        0
+      ],
+      "remaining_cents": [
+        293440,
+        183400,
+        110000
+      ],
+      "seed": 40007,
+      "metrics": {
+        "sessions": 950,
+        "product_impressions": 30880,
+        "sponsored_opportunities": 12352,
+        "sponsored_impressions": 6799,
+        "sponsored_clicks": 257,
+        "session_cvr": 0.11894736842105263,
+        "organic_session_cvr": 0.11052631578947368,
+        "item_cvr": 0.003983160621761658,
+        "sponsored_ctr": 0.03779967642300338,
+        "ad_fill_rate": 0.5504371761658031,
+        "spend_cents": [
+          13320,
+          8300,
+          5040
+        ],
+        "daily_budget_cents": [
+          13426,
+          8366,
+          5040
+        ],
+        "brand_impressions": [
+          2469,
+          2503,
+          1827
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          63
+        ],
+        "brand_delivery": [
+          0.9921048711455385,
+          0.9921109251733206,
+          1.0
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 113,
+        "organic_converted_sessions": 105
+      }
+    },
+    {
+      "day": 9,
+      "allocation_cents": [
+        13440,
+        8400,
+        5000
+      ],
+      "target_cents": [
+        120000,
+        75000,
+        45000
+      ],
+      "spend_cents": [
+        13440,
+        8400,
+        4960
+      ],
+      "cumulative_spend_cents": [
+        120000,
+        75000,
+        44960
+      ],
+      "carryover_cents": [
+        0,
+        0,
+        40
+      ],
+      "remaining_cents": [
+        280000,
+        175000,
+        105040
+      ],
+      "seed": 40008,
+      "metrics": {
+        "sessions": 1100,
+        "product_impressions": 36160,
+        "sponsored_opportunities": 14464,
+        "sponsored_impressions": 6822,
+        "sponsored_clicks": 258,
+        "session_cvr": 0.1190909090909091,
+        "organic_session_cvr": 0.11545454545454545,
+        "item_cvr": 0.004037610619469027,
+        "sponsored_ctr": 0.03781882145998241,
+        "ad_fill_rate": 0.4716537610619469,
+        "spend_cents": [
+          13440,
+          8400,
+          4960
+        ],
+        "daily_budget_cents": [
+          13440,
+          8400,
+          5000
+        ],
+        "brand_impressions": [
+          2244,
+          2669,
+          1909
+        ],
+        "brand_clicks": [
+          112,
+          84,
+          62
+        ],
+        "brand_delivery": [
+          1.0,
+          1.0,
+          0.992
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 131,
+        "organic_converted_sessions": 127
+      }
+    },
+    {
+      "day": 10,
+      "allocation_cents": [
+        13333,
+        8333,
+        5040
+      ],
+      "target_cents": [
+        133333,
+        83333,
+        50000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        5040
+      ],
+      "cumulative_spend_cents": [
+        133320,
+        83300,
+        50000
+      ],
+      "carryover_cents": [
+        13,
+        33,
+        0
+      ],
+      "remaining_cents": [
+        266680,
+        166700,
+        100000
+      ],
+      "seed": 40009,
+      "metrics": {
+        "sessions": 1000,
+        "product_impressions": 33020,
+        "sponsored_opportunities": 13208,
+        "sponsored_impressions": 6609,
+        "sponsored_clicks": 257,
+        "session_cvr": 0.106,
+        "organic_session_cvr": 0.105,
+        "item_cvr": 0.003513022410660206,
+        "sponsored_ctr": 0.03888636707520048,
+        "ad_fill_rate": 0.5003785584494246,
+        "spend_cents": [
+          13320,
+          8300,
+          5040
+        ],
+        "daily_budget_cents": [
+          13333,
+          8333,
+          5040
+        ],
+        "brand_impressions": [
+          2487,
+          2492,
+          1630
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          63
+        ],
+        "brand_delivery": [
+          0.9990249756243906,
+          0.9960398415936638,
+          1.0
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 106,
+        "organic_converted_sessions": 105
+      }
+    },
+    {
+      "day": 11,
+      "allocation_cents": [
+        13346,
+        8366,
+        5000
+      ],
+      "target_cents": [
+        146666,
+        91666,
+        55000
+      ],
+      "spend_cents": [
+        13200,
+        8300,
+        4960
+      ],
+      "cumulative_spend_cents": [
+        146520,
+        91600,
+        54960
+      ],
+      "carryover_cents": [
+        146,
+        66,
+        40
+      ],
+      "remaining_cents": [
+        253480,
+        158400,
+        95040
+      ],
+      "seed": 40010,
+      "metrics": {
+        "sessions": 900,
+        "product_impressions": 28000,
+        "sponsored_opportunities": 11200,
+        "sponsored_impressions": 7302,
+        "sponsored_clicks": 255,
+        "session_cvr": 0.10333333333333333,
+        "organic_session_cvr": 0.11444444444444445,
+        "item_cvr": 0.003607142857142857,
+        "sponsored_ctr": 0.03492193919474117,
+        "ad_fill_rate": 0.6519642857142857,
+        "spend_cents": [
+          13200,
+          8300,
+          4960
+        ],
+        "daily_budget_cents": [
+          13346,
+          8366,
+          5000
+        ],
+        "brand_impressions": [
+          2581,
+          3128,
+          1593
+        ],
+        "brand_clicks": [
+          110,
+          83,
+          62
+        ],
+        "brand_delivery": [
+          0.9890603926270043,
+          0.9921109251733206,
+          0.992
+        ],
+        "pacing_forced_share": 0.05792933442892358,
+        "converted_sessions": 93,
+        "organic_converted_sessions": 103
+      }
+    },
+    {
+      "day": 12,
+      "allocation_cents": [
+        13480,
+        8400,
+        5040
+      ],
+      "target_cents": [
+        160000,
+        100000,
+        60000
+      ],
+      "spend_cents": [
+        13440,
+        8400,
+        5040
+      ],
+      "cumulative_spend_cents": [
+        159960,
+        100000,
+        60000
+      ],
+      "carryover_cents": [
+        40,
+        0,
+        0
+      ],
+      "remaining_cents": [
+        240040,
+        150000,
+        90000
+      ],
+      "seed": 40011,
+      "metrics": {
+        "sessions": 1200,
+        "product_impressions": 38520,
+        "sponsored_opportunities": 15408,
+        "sponsored_impressions": 6913,
+        "sponsored_clicks": 259,
+        "session_cvr": 0.09583333333333334,
+        "organic_session_cvr": 0.0975,
+        "item_cvr": 0.0032710280373831778,
+        "sponsored_ctr": 0.03746564443801533,
+        "ad_fill_rate": 0.44866303219106957,
+        "spend_cents": [
+          13440,
+          8400,
+          5040
+        ],
+        "daily_budget_cents": [
+          13480,
+          8400,
+          5040
+        ],
+        "brand_impressions": [
+          2226,
+          2625,
+          2062
+        ],
+        "brand_clicks": [
+          112,
+          84,
+          63
+        ],
+        "brand_delivery": [
+          0.9970326409495549,
+          1.0,
+          1.0
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 115,
+        "organic_converted_sessions": 117
+      }
+    },
+    {
+      "day": 13,
+      "allocation_cents": [
+        13373,
+        8333,
+        5000
+      ],
+      "target_cents": [
+        173333,
+        108333,
+        65000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        4960
+      ],
+      "cumulative_spend_cents": [
+        173280,
+        108300,
+        64960
+      ],
+      "carryover_cents": [
+        53,
+        33,
+        40
+      ],
+      "remaining_cents": [
+        226720,
+        141700,
+        85040
+      ],
+      "seed": 40012,
+      "metrics": {
+        "sessions": 1400,
+        "product_impressions": 43600,
+        "sponsored_opportunities": 17440,
+        "sponsored_impressions": 6482,
+        "sponsored_clicks": 256,
+        "session_cvr": 0.10571428571428572,
+        "organic_session_cvr": 0.10857142857142857,
+        "item_cvr": 0.0035550458715596332,
+        "sponsored_ctr": 0.03949398333847578,
+        "ad_fill_rate": 0.3716743119266055,
+        "spend_cents": [
+          13320,
+          8300,
+          4960
+        ],
+        "daily_budget_cents": [
+          13373,
+          8333,
+          5000
+        ],
+        "brand_impressions": [
+          2455,
+          2365,
+          1662
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          62
+        ],
+        "brand_delivery": [
+          0.9960367905481193,
+          0.9960398415936638,
+          0.992
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 148,
+        "organic_converted_sessions": 152
+      }
+    },
+    {
+      "day": 14,
+      "allocation_cents": [
+        13386,
+        8366,
+        5040
+      ],
+      "target_cents": [
+        186666,
+        116666,
+        70000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        5040
+      ],
+      "cumulative_spend_cents": [
+        186600,
+        116600,
+        70000
+      ],
+      "carryover_cents": [
+        66,
+        66,
+        0
+      ],
+      "remaining_cents": [
+        213400,
+        133400,
+        80000
+      ],
+      "seed": 40013,
+      "metrics": {
+        "sessions": 1000,
+        "product_impressions": 32120,
+        "sponsored_opportunities": 12848,
+        "sponsored_impressions": 6739,
+        "sponsored_clicks": 257,
+        "session_cvr": 0.119,
+        "organic_session_cvr": 0.116,
+        "item_cvr": 0.00410958904109589,
+        "sponsored_ctr": 0.03813622199139338,
+        "ad_fill_rate": 0.5245174346201743,
+        "spend_cents": [
+          13320,
+          8300,
+          5040
+        ],
+        "daily_budget_cents": [
+          13386,
+          8366,
+          5040
+        ],
+        "brand_impressions": [
+          2505,
+          2567,
+          1667
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          63
+        ],
+        "brand_delivery": [
+          0.9950694755714926,
+          0.9921109251733206,
+          1.0
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 119,
+        "organic_converted_sessions": 116
+      }
+    },
+    {
+      "day": 15,
+      "allocation_cents": [
+        13400,
+        8400,
+        5000
+      ],
+      "target_cents": [
+        200000,
+        125000,
+        75000
+      ],
+      "spend_cents": [
+        13320,
+        8400,
+        4960
+      ],
+      "cumulative_spend_cents": [
+        199920,
+        125000,
+        74960
+      ],
+      "carryover_cents": [
+        80,
+        0,
+        40
+      ],
+      "remaining_cents": [
+        200080,
+        125000,
+        75040
+      ],
+      "seed": 40014,
+      "metrics": {
+        "sessions": 900,
+        "product_impressions": 28800,
+        "sponsored_opportunities": 11520,
+        "sponsored_impressions": 6916,
+        "sponsored_clicks": 257,
+        "session_cvr": 0.09444444444444444,
+        "organic_session_cvr": 0.08555555555555555,
+        "item_cvr": 0.003263888888888889,
+        "sponsored_ctr": 0.037160208212839795,
+        "ad_fill_rate": 0.6003472222222223,
+        "spend_cents": [
+          13320,
+          8400,
+          4960
+        ],
+        "daily_budget_cents": [
+          13400,
+          8400,
+          5000
+        ],
+        "brand_impressions": [
+          2418,
+          2509,
+          1989
+        ],
+        "brand_clicks": [
+          111,
+          84,
+          62
+        ],
+        "brand_delivery": [
+          0.9940298507462687,
+          1.0,
+          0.992
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 85,
+        "organic_converted_sessions": 77
+      }
+    },
+    {
+      "day": 16,
+      "allocation_cents": [
+        13413,
+        8333,
+        5040
+      ],
+      "target_cents": [
+        213333,
+        133333,
+        80000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        5040
+      ],
+      "cumulative_spend_cents": [
+        213240,
+        133300,
+        80000
+      ],
+      "carryover_cents": [
+        93,
+        33,
+        0
+      ],
+      "remaining_cents": [
+        186760,
+        116700,
+        70000
+      ],
+      "seed": 40015,
+      "metrics": {
+        "sessions": 1050,
+        "product_impressions": 33820,
+        "sponsored_opportunities": 13528,
+        "sponsored_impressions": 6431,
+        "sponsored_clicks": 257,
+        "session_cvr": 0.09333333333333334,
+        "organic_session_cvr": 0.09523809523809523,
+        "item_cvr": 0.003015966883500887,
+        "sponsored_ctr": 0.03996268076504432,
+        "ad_fill_rate": 0.47538438793613247,
+        "spend_cents": [
+          13320,
+          8300,
+          5040
+        ],
+        "daily_budget_cents": [
+          13413,
+          8333,
+          5040
+        ],
+        "brand_impressions": [
+          2547,
+          2523,
+          1361
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          63
+        ],
+        "brand_delivery": [
+          0.9930664280921494,
+          0.9960398415936638,
+          1.0
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 98,
+        "organic_converted_sessions": 100
+      }
+    },
+    {
+      "day": 17,
+      "allocation_cents": [
+        13426,
+        8366,
+        5000
+      ],
+      "target_cents": [
+        226666,
+        141666,
+        85000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        4960
+      ],
+      "cumulative_spend_cents": [
+        226560,
+        141600,
+        84960
+      ],
+      "carryover_cents": [
+        106,
+        66,
+        40
+      ],
+      "remaining_cents": [
+        173440,
+        108400,
+        65040
+      ],
+      "seed": 40016,
+      "metrics": {
+        "sessions": 1000,
+        "product_impressions": 31460,
+        "sponsored_opportunities": 12584,
+        "sponsored_impressions": 6593,
+        "sponsored_clicks": 256,
+        "session_cvr": 0.114,
+        "organic_session_cvr": 0.107,
+        "item_cvr": 0.0038779402415766054,
+        "sponsored_ctr": 0.03882906112543607,
+        "ad_fill_rate": 0.5239192625556262,
+        "spend_cents": [
+          13320,
+          8300,
+          4960
+        ],
+        "daily_budget_cents": [
+          13426,
+          8366,
+          5000
+        ],
+        "brand_impressions": [
+          2508,
+          2662,
+          1423
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          62
+        ],
+        "brand_delivery": [
+          0.9921048711455385,
+          0.9921109251733206,
+          0.992
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 114,
+        "organic_converted_sessions": 107
+      }
+    },
+    {
+      "day": 18,
+      "allocation_cents": [
+        13440,
+        8400,
+        5040
+      ],
+      "target_cents": [
+        240000,
+        150000,
+        90000
+      ],
+      "spend_cents": [
+        13440,
+        8400,
+        5040
+      ],
+      "cumulative_spend_cents": [
+        240000,
+        150000,
+        90000
+      ],
+      "carryover_cents": [
+        0,
+        0,
+        0
+      ],
+      "remaining_cents": [
+        160000,
+        100000,
+        60000
+      ],
+      "seed": 40017,
+      "metrics": {
+        "sessions": 1150,
+        "product_impressions": 36960,
+        "sponsored_opportunities": 14784,
+        "sponsored_impressions": 7722,
+        "sponsored_clicks": 259,
+        "session_cvr": 0.10695652173913044,
+        "organic_session_cvr": 0.09739130434782609,
+        "item_cvr": 0.0035173160173160175,
+        "sponsored_ctr": 0.03354053354053354,
+        "ad_fill_rate": 0.5223214285714286,
+        "spend_cents": [
+          13440,
+          8400,
+          5040
+        ],
+        "daily_budget_cents": [
+          13440,
+          8400,
+          5040
+        ],
+        "brand_impressions": [
+          2869,
+          2759,
+          2094
+        ],
+        "brand_clicks": [
+          112,
+          84,
+          63
+        ],
+        "brand_delivery": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pacing_forced_share": 0.027195027195027196,
+        "converted_sessions": 123,
+        "organic_converted_sessions": 112
+      }
+    },
+    {
+      "day": 19,
+      "allocation_cents": [
+        13333,
+        8333,
+        5000
+      ],
+      "target_cents": [
+        253333,
+        158333,
+        95000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        4960
+      ],
+      "cumulative_spend_cents": [
+        253320,
+        158300,
+        94960
+      ],
+      "carryover_cents": [
+        13,
+        33,
+        40
+      ],
+      "remaining_cents": [
+        146680,
+        91700,
+        55040
+      ],
+      "seed": 40018,
+      "metrics": {
+        "sessions": 1300,
+        "product_impressions": 41580,
+        "sponsored_opportunities": 16632,
+        "sponsored_impressions": 7226,
+        "sponsored_clicks": 256,
+        "session_cvr": 0.12,
+        "organic_session_cvr": 0.12,
+        "item_cvr": 0.0039923039923039924,
+        "sponsored_ctr": 0.035427622474398006,
+        "ad_fill_rate": 0.43446368446368444,
+        "spend_cents": [
+          13320,
+          8300,
+          4960
+        ],
+        "daily_budget_cents": [
+          13333,
+          8333,
+          5000
+        ],
+        "brand_impressions": [
+          2738,
+          2359,
+          2129
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          62
+        ],
+        "brand_delivery": [
+          0.9990249756243906,
+          0.9960398415936638,
+          0.992
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 156,
+        "organic_converted_sessions": 156
+      }
+    },
+    {
+      "day": 20,
+      "allocation_cents": [
+        13346,
+        8366,
+        5040
+      ],
+      "target_cents": [
+        266666,
+        166666,
+        100000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        5040
+      ],
+      "cumulative_spend_cents": [
+        266640,
+        166600,
+        100000
+      ],
+      "carryover_cents": [
+        26,
+        66,
+        0
+      ],
+      "remaining_cents": [
+        133360,
+        83400,
+        50000
+      ],
+      "seed": 40019,
+      "metrics": {
+        "sessions": 1400,
+        "product_impressions": 45180,
+        "sponsored_opportunities": 18072,
+        "sponsored_impressions": 7492,
+        "sponsored_clicks": 257,
+        "session_cvr": 0.10142857142857142,
+        "organic_session_cvr": 0.09785714285714285,
+        "item_cvr": 0.0034085878707392652,
+        "sponsored_ctr": 0.03430325680726108,
+        "ad_fill_rate": 0.41456396635679504,
+        "spend_cents": [
+          13320,
+          8300,
+          5040
+        ],
+        "daily_budget_cents": [
+          13346,
+          8366,
+          5040
+        ],
+        "brand_impressions": [
+          2271,
+          3053,
+          2168
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          63
+        ],
+        "brand_delivery": [
+          0.9980518507417953,
+          0.9921109251733206,
+          1.0
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 142,
+        "organic_converted_sessions": 137
+      }
+    },
+    {
+      "day": 21,
+      "allocation_cents": [
+        13360,
+        8400,
+        5000
+      ],
+      "target_cents": [
+        280000,
+        175000,
+        105000
+      ],
+      "spend_cents": [
+        13320,
+        8400,
+        4960
+      ],
+      "cumulative_spend_cents": [
+        279960,
+        175000,
+        104960
+      ],
+      "carryover_cents": [
+        40,
+        0,
+        40
+      ],
+      "remaining_cents": [
+        120040,
+        75000,
+        45040
+      ],
+      "seed": 40020,
+      "metrics": {
+        "sessions": 1000,
+        "product_impressions": 32680,
+        "sponsored_opportunities": 13072,
+        "sponsored_impressions": 6207,
+        "sponsored_clicks": 257,
+        "session_cvr": 0.11,
+        "organic_session_cvr": 0.111,
+        "item_cvr": 0.0037637698898408812,
+        "sponsored_ctr": 0.041404865474464314,
+        "ad_fill_rate": 0.47483170134638925,
+        "spend_cents": [
+          13320,
+          8400,
+          4960
+        ],
+        "daily_budget_cents": [
+          13360,
+          8400,
+          5000
+        ],
+        "brand_impressions": [
+          2116,
+          2385,
+          1706
+        ],
+        "brand_clicks": [
+          111,
+          84,
+          62
+        ],
+        "brand_delivery": [
+          0.9970059880239521,
+          1.0,
+          0.992
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 110,
+        "organic_converted_sessions": 111
+      }
+    },
+    {
+      "day": 22,
+      "allocation_cents": [
+        13373,
+        8333,
+        5040
+      ],
+      "target_cents": [
+        293333,
+        183333,
+        110000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        5040
+      ],
+      "cumulative_spend_cents": [
+        293280,
+        183300,
+        110000
+      ],
+      "carryover_cents": [
+        53,
+        33,
+        0
+      ],
+      "remaining_cents": [
+        106720,
+        66700,
+        40000
+      ],
+      "seed": 40021,
+      "metrics": {
+        "sessions": 1000,
+        "product_impressions": 31900,
+        "sponsored_opportunities": 12760,
+        "sponsored_impressions": 6785,
+        "sponsored_clicks": 257,
+        "session_cvr": 0.098,
+        "organic_session_cvr": 0.106,
+        "item_cvr": 0.0032601880877742946,
+        "sponsored_ctr": 0.037877671333824615,
+        "ad_fill_rate": 0.5317398119122257,
+        "spend_cents": [
+          13320,
+          8300,
+          5040
+        ],
+        "daily_budget_cents": [
+          13373,
+          8333,
+          5040
+        ],
+        "brand_impressions": [
+          2507,
+          2912,
+          1366
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          63
+        ],
+        "brand_delivery": [
+          0.9960367905481193,
+          0.9960398415936638,
+          1.0
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 98,
+        "organic_converted_sessions": 106
+      }
+    },
+    {
+      "day": 23,
+      "allocation_cents": [
+        13386,
+        8366,
+        5000
+      ],
+      "target_cents": [
+        306666,
+        191666,
+        115000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        4960
+      ],
+      "cumulative_spend_cents": [
+        306600,
+        191600,
+        114960
+      ],
+      "carryover_cents": [
+        66,
+        66,
+        40
+      ],
+      "remaining_cents": [
+        93400,
+        58400,
+        35040
+      ],
+      "seed": 40022,
+      "metrics": {
+        "sessions": 900,
+        "product_impressions": 28820,
+        "sponsored_opportunities": 11528,
+        "sponsored_impressions": 6329,
+        "sponsored_clicks": 256,
+        "session_cvr": 0.12,
+        "organic_session_cvr": 0.11777777777777777,
+        "item_cvr": 0.00395558639833449,
+        "sponsored_ctr": 0.04044872807710539,
+        "ad_fill_rate": 0.5490111034004164,
+        "spend_cents": [
+          13320,
+          8300,
+          4960
+        ],
+        "daily_budget_cents": [
+          13386,
+          8366,
+          5000
+        ],
+        "brand_impressions": [
+          2332,
+          2612,
+          1385
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          62
+        ],
+        "brand_delivery": [
+          0.9950694755714926,
+          0.9921109251733206,
+          0.992
+        ],
+        "pacing_forced_share": 0.038710696792542264,
+        "converted_sessions": 108,
+        "organic_converted_sessions": 106
+      }
+    },
+    {
+      "day": 24,
+      "allocation_cents": [
+        13400,
+        8400,
+        5040
+      ],
+      "target_cents": [
+        320000,
+        200000,
+        120000
+      ],
+      "spend_cents": [
+        13320,
+        8400,
+        5040
+      ],
+      "cumulative_spend_cents": [
+        319920,
+        200000,
+        120000
+      ],
+      "carryover_cents": [
+        80,
+        0,
+        0
+      ],
+      "remaining_cents": [
+        80080,
+        50000,
+        30000
+      ],
+      "seed": 40023,
+      "metrics": {
+        "sessions": 1100,
+        "product_impressions": 34900,
+        "sponsored_opportunities": 13960,
+        "sponsored_impressions": 6657,
+        "sponsored_clicks": 258,
+        "session_cvr": 0.1290909090909091,
+        "organic_session_cvr": 0.12,
+        "item_cvr": 0.004269340974212035,
+        "sponsored_ctr": 0.03875619648490311,
+        "ad_fill_rate": 0.4768624641833811,
+        "spend_cents": [
+          13320,
+          8400,
+          5040
+        ],
+        "daily_budget_cents": [
+          13400,
+          8400,
+          5040
+        ],
+        "brand_impressions": [
+          2545,
+          2490,
+          1622
+        ],
+        "brand_clicks": [
+          111,
+          84,
+          63
+        ],
+        "brand_delivery": [
+          0.9940298507462687,
+          1.0,
+          1.0
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 142,
+        "organic_converted_sessions": 132
+      }
+    },
+    {
+      "day": 25,
+      "allocation_cents": [
+        13413,
+        8333,
+        5000
+      ],
+      "target_cents": [
+        333333,
+        208333,
+        125000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        4960
+      ],
+      "cumulative_spend_cents": [
+        333240,
+        208300,
+        124960
+      ],
+      "carryover_cents": [
+        93,
+        33,
+        40
+      ],
+      "remaining_cents": [
+        66760,
+        41700,
+        25040
+      ],
+      "seed": 40024,
+      "metrics": {
+        "sessions": 950,
+        "product_impressions": 30280,
+        "sponsored_opportunities": 12112,
+        "sponsored_impressions": 7376,
+        "sponsored_clicks": 256,
+        "session_cvr": 0.11473684210526315,
+        "organic_session_cvr": 0.10947368421052632,
+        "item_cvr": 0.0038969616908850727,
+        "sponsored_ctr": 0.03470715835140998,
+        "ad_fill_rate": 0.6089828269484808,
+        "spend_cents": [
+          13320,
+          8300,
+          4960
+        ],
+        "daily_budget_cents": [
+          13413,
+          8333,
+          5000
+        ],
+        "brand_impressions": [
+          2987,
+          2700,
+          1689
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          62
+        ],
+        "brand_delivery": [
+          0.9930664280921494,
+          0.9960398415936638,
+          0.992
+        ],
+        "pacing_forced_share": 0.11401843817787419,
+        "converted_sessions": 109,
+        "organic_converted_sessions": 104
+      }
+    },
+    {
+      "day": 26,
+      "allocation_cents": [
+        13426,
+        8366,
+        5040
+      ],
+      "target_cents": [
+        346666,
+        216666,
+        130000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        5040
+      ],
+      "cumulative_spend_cents": [
+        346560,
+        216600,
+        130000
+      ],
+      "carryover_cents": [
+        106,
+        66,
+        0
+      ],
+      "remaining_cents": [
+        53440,
+        33400,
+        20000
+      ],
+      "seed": 40025,
+      "metrics": {
+        "sessions": 1200,
+        "product_impressions": 38200,
+        "sponsored_opportunities": 15280,
+        "sponsored_impressions": 6448,
+        "sponsored_clicks": 257,
+        "session_cvr": 0.10083333333333333,
+        "organic_session_cvr": 0.09916666666666667,
+        "item_cvr": 0.003350785340314136,
+        "sponsored_ctr": 0.039857320099255585,
+        "ad_fill_rate": 0.42198952879581153,
+        "spend_cents": [
+          13320,
+          8300,
+          5040
+        ],
+        "daily_budget_cents": [
+          13426,
+          8366,
+          5040
+        ],
+        "brand_impressions": [
+          2513,
+          2337,
+          1598
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          63
+        ],
+        "brand_delivery": [
+          0.9921048711455385,
+          0.9921109251733206,
+          1.0
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 121,
+        "organic_converted_sessions": 119
+      }
+    },
+    {
+      "day": 27,
+      "allocation_cents": [
+        13440,
+        8400,
+        5000
+      ],
+      "target_cents": [
+        360000,
+        225000,
+        135000
+      ],
+      "spend_cents": [
+        13440,
+        8400,
+        4960
+      ],
+      "cumulative_spend_cents": [
+        360000,
+        225000,
+        134960
+      ],
+      "carryover_cents": [
+        0,
+        0,
+        40
+      ],
+      "remaining_cents": [
+        40000,
+        25000,
+        15040
+      ],
+      "seed": 40026,
+      "metrics": {
+        "sessions": 1400,
+        "product_impressions": 44760,
+        "sponsored_opportunities": 17904,
+        "sponsored_impressions": 6266,
+        "sponsored_clicks": 258,
+        "session_cvr": 0.11071428571428571,
+        "organic_session_cvr": 0.10571428571428572,
+        "item_cvr": 0.003507596067917784,
+        "sponsored_ctr": 0.04117459304181296,
+        "ad_fill_rate": 0.3499776586237712,
+        "spend_cents": [
+          13440,
+          8400,
+          4960
+        ],
+        "daily_budget_cents": [
+          13440,
+          8400,
+          5000
+        ],
+        "brand_impressions": [
+          2573,
+          2162,
+          1531
+        ],
+        "brand_clicks": [
+          112,
+          84,
+          62
+        ],
+        "brand_delivery": [
+          1.0,
+          1.0,
+          0.992
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 155,
+        "organic_converted_sessions": 148
+      }
+    },
+    {
+      "day": 28,
+      "allocation_cents": [
+        13333,
+        8333,
+        5040
+      ],
+      "target_cents": [
+        373333,
+        233333,
+        140000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        5040
+      ],
+      "cumulative_spend_cents": [
+        373320,
+        233300,
+        140000
+      ],
+      "carryover_cents": [
+        13,
+        33,
+        0
+      ],
+      "remaining_cents": [
+        26680,
+        16700,
+        10000
+      ],
+      "seed": 40027,
+      "metrics": {
+        "sessions": 1000,
+        "product_impressions": 32040,
+        "sponsored_opportunities": 12816,
+        "sponsored_impressions": 6535,
+        "sponsored_clicks": 257,
+        "session_cvr": 0.095,
+        "organic_session_cvr": 0.088,
+        "item_cvr": 0.0032459425717852684,
+        "sponsored_ctr": 0.039326702371843915,
+        "ad_fill_rate": 0.5099094881398252,
+        "spend_cents": [
+          13320,
+          8300,
+          5040
+        ],
+        "daily_budget_cents": [
+          13333,
+          8333,
+          5040
+        ],
+        "brand_impressions": [
+          2113,
+          2620,
+          1802
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          63
+        ],
+        "brand_delivery": [
+          0.9990249756243906,
+          0.9960398415936638,
+          1.0
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 95,
+        "organic_converted_sessions": 88
+      }
+    },
+    {
+      "day": 29,
+      "allocation_cents": [
+        13346,
+        8366,
+        5000
+      ],
+      "target_cents": [
+        386666,
+        241666,
+        145000
+      ],
+      "spend_cents": [
+        13320,
+        8300,
+        4960
+      ],
+      "cumulative_spend_cents": [
+        386640,
+        241600,
+        144960
+      ],
+      "carryover_cents": [
+        26,
+        66,
+        40
+      ],
+      "remaining_cents": [
+        13360,
+        8400,
+        5040
+      ],
+      "seed": 40028,
+      "metrics": {
+        "sessions": 1200,
+        "product_impressions": 39100,
+        "sponsored_opportunities": 15640,
+        "sponsored_impressions": 7046,
+        "sponsored_clicks": 256,
+        "session_cvr": 0.11083333333333334,
+        "organic_session_cvr": 0.11583333333333333,
+        "item_cvr": 0.0036572890025575447,
+        "sponsored_ctr": 0.03633267101901788,
+        "ad_fill_rate": 0.4505115089514066,
+        "spend_cents": [
+          13320,
+          8300,
+          4960
+        ],
+        "daily_budget_cents": [
+          13346,
+          8366,
+          5000
+        ],
+        "brand_impressions": [
+          2860,
+          2413,
+          1773
+        ],
+        "brand_clicks": [
+          111,
+          83,
+          62
+        ],
+        "brand_delivery": [
+          0.9980518507417953,
+          0.9921109251733206,
+          0.992
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 133,
+        "organic_converted_sessions": 139
+      }
+    },
+    {
+      "day": 30,
+      "allocation_cents": [
+        13360,
+        8400,
+        5040
+      ],
+      "target_cents": [
+        400000,
+        250000,
+        150000
+      ],
+      "spend_cents": [
+        13320,
+        8400,
+        5040
+      ],
+      "cumulative_spend_cents": [
+        399960,
+        250000,
+        150000
+      ],
+      "carryover_cents": [
+        40,
+        0,
+        0
+      ],
+      "remaining_cents": [
+        40,
+        0,
+        0
+      ],
+      "seed": 40029,
+      "metrics": {
+        "sessions": 1500,
+        "product_impressions": 47660,
+        "sponsored_opportunities": 19064,
+        "sponsored_impressions": 7258,
+        "sponsored_clicks": 258,
+        "session_cvr": 0.11266666666666666,
+        "organic_session_cvr": 0.108,
+        "item_cvr": 0.0038187159043222827,
+        "sponsored_ctr": 0.03554698263984569,
+        "ad_fill_rate": 0.3807175828787243,
+        "spend_cents": [
+          13320,
+          8400,
+          5040
+        ],
+        "daily_budget_cents": [
+          13360,
+          8400,
+          5040
+        ],
+        "brand_impressions": [
+          3015,
+          2453,
+          1790
+        ],
+        "brand_clicks": [
+          111,
+          84,
+          63
+        ],
+        "brand_delivery": [
+          0.9970059880239521,
+          1.0,
+          1.0
+        ],
+        "pacing_forced_share": 0.0,
+        "converted_sessions": 169,
+        "organic_converted_sessions": 162
+      }
+    }
+  ],
+  "summary": {
+    "sessions": 31200,
+    "converted_sessions": 3338,
+    "organic_converted_sessions": 3305,
+    "session_cvr": 0.10698717948717949,
+    "organic_session_cvr": 0.10592948717948718,
+    "delta_cvr": 0.001057692307692315,
+    "cvr_point_pass": true,
+    "spend_cents": [
+      399960,
+      250000,
+      150000
+    ],
+    "remaining_cents": [
+      40,
+      0,
+      0
+    ],
+    "brand_delivery": [
+      0.9999,
+      1.0,
+      1.0
+    ],
+    "brand_status": [
+      "cpc_residual",
+      "complete",
+      "complete"
+    ],
+    "delivery_pass": true,
+    "budget_overshoots": 0
+  }
+}

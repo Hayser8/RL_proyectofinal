@@ -18,9 +18,11 @@ ni instalación de Python. GitHub muestra el código del HTML, no ejecuta la dem
 - Presupuestos monetarios en centavos, cobro solo por clic, prevención de
   sobregiros y de patrocinados duplicados en un mismo bloque.
 - Pacing que limita adelantos y exige oportunidades para marcas atrasadas.
+- Campañas de varios días con saldo continuo, recuperación de inversión pendiente
+  y tráfico variable, incluidos días sin visitas.
 - Modelo guardado, curvas de entrenamiento, cinco políticas de comparación,
   exportaciones CSV/JSON y una demo que reproduce decisiones del modelo.
-- 17 pruebas automatizadas sin dependencias adicionales de testing.
+- 26 pruebas automatizadas sin dependencias adicionales de testing.
 
 El MP4 que estaba en la carpeta fue eliminado y se agregó `*.mp4` a `.gitignore`.
 El video no estaba versionado, por lo que no hay que limpiar historial de Git.
@@ -49,6 +51,12 @@ Opciones útiles:
 ```bash
 python -m retail_media train --episodes 120 --seed 42
 python -m retail_media evaluate --eval-seed 30000 --eval-runs 30
+
+# Campaña completa con saldo continuo y el modelo ya entrenado
+python -m retail_media campaign
+
+# Caso de recuperación: primer día sin visitas y luego tráfico variable
+python -m retail_media campaign --traffic-file config/campaign_traffic.json
 
 # Experimento pequeño; guardar aparte para conservar el modelo entregado
 python -m retail_media run --episodes 5 --sessions 100 \
@@ -99,11 +107,11 @@ introducir pequeñas diferencias numéricas.
 | Casa | USD 2,500 | 30 días | USD 83.33 | USD 1.00 |
 | Pulse | USD 1,500 | 30 días | USD 50.00 | USD 0.80 |
 
-Cada episodio representa **un día independiente**, con presupuesto reiniciado
-para entrenar. La cuota se calcula como `budget_cents // campaign_days`, por
-lo que hay un pequeño residuo de redondeo y de CPC indivisible. Los 30 días de
-evaluación son réplicas independientes del mismo día; **no se implementa todavía
-una campaña de 30 días con deuda y saldo transferidos entre fechas**.
+Cada episodio de entrenamiento y cada réplica de `evaluate` representa **un día
+independiente**, con cuota `budget_cents // campaign_days`. El comando nuevo
+`campaign` ejecuta una campaña completa con saldo continuo: lo no gastado se
+arrastra a los días siguientes y el último día recupera también el redondeo.
+Los resultados diarios originales y la demo HTML conservan su significado.
 
 El objetivo mínimo configurable es entregar el 90% de la cuota diaria; no es
 un contrato de impresiones. El pacing vigila gasto entregado frente al avance
@@ -116,6 +124,55 @@ puede exigir exposición, pero no puede forzar clics. Si faltan tráfico,
 relevancia o productos, puede quedar inversión sin entregar. El reporte muestra
 el cumplimiento por marca y la frecuencia de intervención del pacing; no oculta
 ese conflicto rellenando gasto artificialmente.
+
+## Avance: campaña con saldo continuo
+
+Antes, un día con pocas visitas perdía su oportunidad de entregar inversión:
+el siguiente día empezaba nuevamente con la misma cuota independiente. Ahora
+el límite de cada marca se calcula a partir de su gasto **acumulado**:
+
+```text
+meta_acumulada = presupuesto_total × día // días_de_campaña
+asignación_del_día = meta_acumulada − gasto_acumulado
+```
+
+La meta del último día equivale al presupuesto completo. Cada clic debe caber
+en la asignación antes de mostrarse el anuncio. El cierre del día valida el
+gasto y solo después actualiza el saldo; un cierre inválido no altera el ledger.
+La secuencia impide abrir otro día antes de cerrar el actual.
+
+`config/campaign_traffic.json` contiene una lista de sesiones para cada uno de
+los 30 días. Admite cero para simular una caída de la web o una jornada sin
+visitas. Esos días no generan cobros ni un CVR ficticio: su CVR se reporta `null`.
+El CVR de campaña se calcula con **todas las sesiones**, sin promediar porcentajes
+de días con volúmenes diferentes. Si toda la campaña tiene cero visitas, su CVR
+también es `null` y se informa la falta de entrega.
+
+Ejemplo incluido, semilla 40000, **31,200 sesiones** y primer día sin tráfico:
+
+| Marca | Presupuesto | Gasto acumulado final | Saldo pendiente |
+|---|---:|---:|---:|
+| Nova | USD 4,000.00 | USD 3,999.60 | USD 0.40 |
+| Casa | USD 2,500.00 | USD 2,500.00 | USD 0.00 |
+| Pulse | USD 1,500.00 | USD 1,500.00 | USD 0.00 |
+
+El atraso inicial se recupera durante los días siguientes. El único saldo final,
+USD 0.40 de Nova, es menor a su CPC de USD 1.20 y no permite comprar otro clic.
+No se inventa gasto para completar ese residuo. **No hubo sobregiros**.
+El CVR de esta trayectoria fue **10.70%** frente a **10.59%** de su referencia
+orgánica emparejada; es una sola campaña y no constituye evidencia estadística
+de mejora. Sus días dependen del saldo anterior y no se tratan como 30 réplicas
+independientes para calcular un intervalo de confianza.
+
+Se utiliza la política existente congelada, entrenada sobre días independientes:
+no se volvió a entrenar ni se alteró `artifacts/model.npz`. El nuevo controlador
+le asigna el saldo actualizado. Se puede comparar con las políticas `relevance`,
+`random` u `organic` usando `--policy`; cada una genera archivos separados.
+
+Los reportes `reports/campaign-rl.json` y `reports/campaign-rl.csv` incluyen gasto
+diario, meta acumulada, gasto acumulado, atraso y saldo por marca. Un saldo mayor
+que el CPC queda señalado como inversión pendiente, aunque alcance el mínimo
+de entrega; no se confunde cumplimiento mínimo con consumo completo.
 
 ## Formulación del aprendizaje
 
@@ -191,13 +248,17 @@ print(env.metrics())
 | `retail_media/environment.py` | Tráfico, respuestas, grid, saldo y pacing |
 | `retail_media/agent.py` | Q-learning y persistencia sin pickle |
 | `retail_media/experiment.py` | Entrenamiento, políticas y evaluación emparejada |
+| `retail_media/campaign.py` | Saldo continuo, recuperación de atrasos y evaluación de campaña |
+| `config/campaign_traffic.json` | Escenario de tráfico diario, incluido un día sin visitas |
 | `retail_media/reporting.py`, `report.html` | Exportación y plantilla de demo |
 | `artifacts/model.npz` | Modelo entrenado + metadatos y fingerprint |
 | `artifacts/training.csv`, `training.json` | Curvas de los 120 episodios |
 | `reports/evaluation.json` | Métricas completas, catálogo y trazas de ejemplo |
 | `reports/evaluation.csv` | 150 registros: 5 políticas × 30 días |
+| `reports/campaign-rl.json`, `campaign-rl.csv` | Trayectoria completa: 30 días y saldo acumulado por marca |
 | `reports/demo.html` | Reporte autónomo con grid y carga progresiva |
 | `tests/test_mvp.py` | Pruebas de reglas, Q-learning y evaluación |
+| `tests/test_campaign.py` | Arrastre de saldo, cero tráfico, redondeo y evaluación de campaña |
 
 La demo carga bloques de las primeras 12 sesiones registradas por política.
 Es una **reproducción finita de decisiones reales del modelo**, no inferencia
@@ -218,7 +279,7 @@ genera tráfico nuevo y ejecuta la política cuando se usa `evaluate` o la API.
   de no inferioridad de CVR acordado antes del experimento, además de control
   de inversión. El objetivo aquí tiene tolerancia cero en media simulada.
 - La siguiente iteración puede usar logs reales, un modelo de respuesta
-  calibrado, campañas con saldo continuo y un estado más completo; DQN/PPO
+  calibrado y reentrenar con un estado que represente la campaña completa; DQN/PPO
   solo se justifican cuando aumente la dimensión del problema.
 
 Referencias conceptuales: [Watkins y Dayan, Q-learning (1992)](https://www.gatsby.ucl.ac.uk/~dayan/papers/cjch.pdf)

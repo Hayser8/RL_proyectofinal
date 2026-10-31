@@ -10,7 +10,7 @@ import numpy as np
 from .agent import QAgent
 from .environment import RetailMediaEnv
 
-POLICIES = ('organic', 'random', 'relevance', 'untrained', 'rl')
+POLICIES = ('organic', 'random', 'relevance', 'bid', 'rotation', 'untrained', 'rl')
 
 
 def train(config, episodes=120, seed=42, output=Path('artifacts')):
@@ -81,12 +81,26 @@ def choose_action(policy, env, agent, rng):
     allowed = env.allowed_actions()
     if policy == 'random':
         return int(rng.choice(allowed))
+    sponsored = [action for action in allowed if action]
+    if not sponsored:
+        return 0
+    if policy == 'bid':
+        return min(sponsored, key=lambda action: (-env.config.brands[env.products[action - 1]['brand']]['cpc_cents'], action))
     if policy == 'relevance':
         segment = env.state()[0]
         # Only observable product metadata; does not read response probabilities.
         scores = [0.7 if a == 0 else 1.0 * (env.products[a - 1]['category'] == segment) + .2 * env.products[a - 1]['quality'] for a in allowed]
         best = np.flatnonzero(np.asarray(scores) == max(scores))
         return int(allowed[int(rng.choice(best))])
+    if policy == 'rotation':
+        fewest_impressions = min(env.brand_impressions[env.products[action - 1]['brand']] for action in sponsored)
+        candidates = [action for action in sponsored
+                      if env.brand_impressions[env.products[action - 1]['brand']] == fewest_impressions]
+        segment = env.state()[0]
+        scores = [1.0 * (env.products[action - 1]['category'] == segment) + .2 * env.products[action - 1]['quality']
+                  for action in candidates]
+        best = np.flatnonzero(np.asarray(scores) == max(scores))
+        return int(candidates[int(rng.choice(best))])
     return agent.act(env.state(), allowed, epsilon=0.)
 
 
@@ -126,6 +140,9 @@ def evaluate(config, agent, seeds=None, trace_sessions=12):
             'spend_cents': np.mean([r['spend_cents'] for r in rows], axis=0).tolist(),
             'brand_delivery': np.mean([r['brand_delivery'] for r in rows], axis=0).tolist(),
             'brand_impressions': np.mean([r['brand_impressions'] for r in rows], axis=0).tolist(),
+            'position_brand_impressions': np.mean([r['position_brand_impressions'] for r in rows], axis=0).tolist(),
+            'cpc_revenue_cents': float(np.mean([r['cpc_revenue_cents'] for r in rows])),
+            'sponsored_conversion_value_cents': float(np.mean([r['sponsored_conversion_value_cents'] for r in rows])),
             'delivery_pass_rate': [float(np.mean([r['brand_delivery'][b] >= config.minimum_delivery for r in rows])) for b in range(3)],
             'pacing_forced_share': float(np.mean([r['pacing_forced_share'] for r in rows])),
             'budget_overshoots': sum(any(s > b for s, b in zip(r['spend_cents'], r['daily_budget_cents'])) for r in rows)

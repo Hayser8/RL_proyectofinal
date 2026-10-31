@@ -9,7 +9,7 @@ import numpy as np
 from retail_media.config import Config, load_config
 from retail_media.environment import RetailMediaEnv
 from retail_media.agent import QAgent
-from retail_media.experiment import evaluate, train
+from retail_media.experiment import choose_action, evaluate, train
 from retail_media.reporting import write_report
 
 
@@ -203,6 +203,27 @@ class AgentTests(unittest.TestCase):
 
 
 class ExperimentTests(unittest.TestCase):
+    def test_bid_only_prefers_highest_cpc_even_when_it_is_irrelevant(self):
+        env = RetailMediaEnv(replace(load_config(), sessions=3), seed=6)
+        env.item_segments[:] = 1  # Hogar; action 1 is Nova · Tecnología Esencial.
+
+        action = choose_action('bid', env, QAgent(), np.random.default_rng(1))
+
+        self.assertEqual(action, 1)
+        self.assertEqual(env.products[action - 1]['brand'], 0)
+        self.assertNotEqual(env.products[action - 1]['category'], env.state()[0])
+
+    def test_rotation_uses_another_brand_after_a_brand_receives_an_impression(self):
+        env = RetailMediaEnv(replace(load_config(), sessions=3), seed=6)
+        rng = np.random.default_rng(1)
+        first = choose_action('rotation', env, QAgent(), rng)
+        first_brand = env.products[first - 1]['brand']
+        env.step(first)
+
+        second = choose_action('rotation', env, QAgent(), rng)
+
+        self.assertNotEqual(env.products[second - 1]['brand'], first_brand)
+
     def test_training_produces_nonzero_q_and_artifacts(self):
         config = replace(load_config(), sessions=6)
         with tempfile.TemporaryDirectory() as tmp:
@@ -218,7 +239,7 @@ class ExperimentTests(unittest.TestCase):
         agent.values((0,))
         before = {k: v.copy() for k, v in agent.table.items()}
         result = evaluate(config, agent, seeds=[10001, 10002], trace_sessions=2)
-        self.assertEqual(set(result['policies']), {'organic', 'random', 'relevance', 'untrained', 'rl'})
+        self.assertEqual(set(result['policies']), {'organic', 'random', 'relevance', 'bid', 'rotation', 'untrained', 'rl'})
         rows = result['runs']
         for seed in [10001, 10002]:
             same_seed = [r for r in rows if r['seed'] == seed]
@@ -228,6 +249,8 @@ class ExperimentTests(unittest.TestCase):
         for k, v in before.items():
             np.testing.assert_array_equal(v, agent.table[k])
         self.assertEqual(result['policies']['organic']['delta_cvr_ci95'], [0., 0.])
+        self.assertEqual(len(result['policies']['rl']['position_brand_impressions']), 3)
+        self.assertEqual(len(result['policies']['rl']['position_brand_impressions'][0]), 8)
         self.assertTrue(result['traces']['rl'])
 
     def test_report_is_standalone_and_contains_real_grid_traces(self):

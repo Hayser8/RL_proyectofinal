@@ -19,14 +19,16 @@ ni instalación de Python. GitHub muestra el código del HTML, no ejecuta la dem
 - Acción de conservar el orgánico o elegir un producto patrocinado.
 - Multiplicadores de visibilidad por posición patrocinada y valor de conversión
   por campaña; la posición 3 es más visible que la 14.
+- Comparadores de decisión: orgánico, aleatorio, relevancia, mayor CPC,
+  rotación, Q sin entrenar y Q-learning.
 - Presupuestos monetarios en centavos, cobro solo por clic, prevención de
   sobregiros y de patrocinados duplicados en un mismo bloque.
 - Pacing que limita adelantos y exige oportunidades para marcas atrasadas.
 - Campañas de varios días con saldo continuo, recuperación de inversión pendiente
   y tráfico variable, incluidos días sin visitas.
-- Modelo guardado, curvas de entrenamiento, cinco políticas de comparación,
+- Modelo guardado, curvas de entrenamiento, siete políticas de comparación,
   exportaciones CSV/JSON y una demo que reproduce decisiones del modelo.
-- 33 pruebas automatizadas sin dependencias adicionales de testing.
+- 35 pruebas automatizadas sin dependencias adicionales de testing.
 
 El MP4 que estaba en la carpeta fue eliminado y se agregó `*.mp4` a `.gitignore`.
 El video no estaba versionado, por lo que no hay que limpiar historial de Git.
@@ -61,6 +63,10 @@ python -m retail_media campaign
 
 # Caso de recuperación: primer día sin visitas y luego tráfico variable
 python -m retail_media campaign --traffic-file config/campaign_traffic.json
+
+# Comparar una campaña usando únicamente mayor CPC o rotación de marcas
+python -m retail_media campaign --policy bid
+python -m retail_media campaign --policy rotation
 
 # Experimento pequeño; guardar aparte para conservar el modelo entregado
 python -m retail_media run --episodes 5 --sessions 100 \
@@ -208,7 +214,7 @@ completo: es una aproximación deliberada, sin garantías de convergencia óptim
 **Acciones:** 0 conserva el orgánico; 1–18 eligen productos patrocinados. Las
 acciones imposibles por saldo, repetición o pacing se excluyen antes de decidir.
 La referencia solo-orgánico ignora expresamente los compromisos comerciales.
-Las cuatro políticas comerciales comparten el mismo controlador de pacing.
+Los seis comparadores comerciales comparten el mismo controlador de pacing.
 
 **Recompensa por oportunidad:**
 
@@ -240,6 +246,27 @@ holdout orgánico aleatorizado y no se puede reconstruir directamente de logs.
 La política nunca recibe probabilidades verdaderas de clic o compra ni la
 respuesta que habría tenido una acción no ejecutada.
 
+## Comparadores y evidencia de equilibrio
+
+La evaluación ejecuta todas las políticas sobre el mismo tráfico y los mismos
+sorteos aleatorios en cada semilla. Así una diferencia no se atribuye a que una
+política recibió usuarios más favorables.
+
+| Política | Regla de decisión | Qué permite comprobar |
+|---|---|---|
+| `bid` | El CPC más alto elegible; desempata por identificador de producto | El pago por sí solo puede favorecer un producto irrelevante. |
+| `relevance` | Mayor coincidencia con la intención y calidad de producto | El valor para el usuario sin considerar quién paga más. |
+| `rotation` | Marca con menos impresiones; luego relevancia | Distribución equilibrada de exposición entre marcas. |
+| `rl` | Valores Q aprendidos por intención, grupo de posición y profundidad | El equilibrio aprendido entre valor de conversión, CPC, CVR y pacing. |
+
+Además de CVR, CTR, entrega y sobregiros, cada evaluación exporta la matriz
+`position_brand_impressions`: filas por marca y columnas para los spots 3, 4,
+5, 6, 11, 12, 13 y 14. Esta matriz será la evidencia central para responder
+si una marca con mayor CPC monopoliza las posiciones más visibles o si el
+agente la distribuye según relevancia y valor esperado. El comparador `bid`
+está probado para elegir el CPC más alto incluso cuando su categoría no
+coincide con la intención del usuario; no se presenta como una política deseable.
+
 ## Usar la política desde Python
 
 ```python
@@ -265,7 +292,7 @@ print(env.metrics())
 | `retail_media/default_config.json` | Presupuestos, CPC, valor de conversión y multiplicadores de posición |
 | `retail_media/environment.py` | Tráfico, respuestas, grid, saldo, pacing y valor comercial por decisión |
 | `retail_media/agent.py` | Q-learning sensible al grupo de posición y persistencia sin pickle |
-| `retail_media/experiment.py` | Entrenamiento, políticas y evaluación emparejada |
+| `retail_media/experiment.py` | Entrenamiento, comparadores y evaluación emparejada con distribución por posición |
 | `retail_media/campaign.py` | Saldo continuo, recuperación de atrasos y evaluación de campaña |
 | `config/campaign_traffic.json` | Escenario de tráfico diario, incluido un día sin visitas |
 | `retail_media/reporting.py`, `report.html` | Exportación y plantilla de demo |

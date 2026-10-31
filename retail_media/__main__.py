@@ -24,7 +24,7 @@ def main():
     parser.add_argument('--reports', type=Path, default=Path('reports'))
     parser.add_argument('--campaign-seed', type=int, default=40000)
     parser.add_argument('--traffic-file', type=Path, help='JSON con una lista de sesiones por día; admite días con cero tráfico')
-    parser.add_argument('--policy', choices=['rl', 'random', 'relevance', 'organic'], default='rl', help='Política para campaign')
+    parser.add_argument('--policy', choices=['rl', 'random', 'relevance', 'bid', 'rotation', 'organic'], default='rl', help='Política para campaign')
     args = parser.parse_args()
     try:
         config = load_config(args.config)

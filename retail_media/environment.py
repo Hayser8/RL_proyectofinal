@@ -28,6 +28,7 @@ class RetailMediaEnv:
         self.budgets = np.array(budget_cents, dtype=np.int64)
         self.spent = np.zeros(3, dtype=np.int64)
         self.brand_impressions = np.zeros(3, dtype=np.int64)
+        self.position_brand_impressions = np.zeros((3, len(config.sponsored_slots)), dtype=np.int64)
         self.brand_clicks = np.zeros(3, dtype=np.int64)
         self.index = 0
         self._allowed_cache = None
@@ -151,6 +152,7 @@ class RetailMediaEnv:
             self.cpc_revenue_cents += cost
             self.sponsored_conversion_value_cents += conversion_value
             self.brand_impressions[brand] += 1
+            self.position_brand_impressions[brand, self.config.sponsored_slots.index(self.position)] += 1
             self.brand_clicks[brand] += int(clicked)
             self.sponsored_purchases += int(purchase)
             self.used.add(action)
@@ -205,6 +207,7 @@ class RetailMediaEnv:
             'ad_fill_rate': sponsored / len(self.decisions),
             'spend_cents': self.spent.tolist(), 'daily_budget_cents': self.budgets.tolist(),
             'brand_impressions': self.brand_impressions.tolist(), 'brand_clicks': self.brand_clicks.tolist(),
+            'position_brand_impressions': self.position_brand_impressions.tolist(),
             'brand_delivery': (self.spent / np.maximum(1, self.budgets)).tolist(),
             'pacing_forced_share': self.forced_decisions / max(1, sponsored),
             'converted_sessions': int(converted.sum()),

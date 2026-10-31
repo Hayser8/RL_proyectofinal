@@ -13,6 +13,26 @@ from retail_media.experiment import evaluate, train
 from retail_media.reporting import write_report
 
 
+class ConfigurationTests(unittest.TestCase):
+    def test_sponsored_slots_expose_their_configured_commercial_multiplier(self):
+        config = load_config()
+        self.assertEqual(config.position_multiplier(3), 1.30)
+        self.assertEqual(config.position_multiplier(14), 0.70)
+
+    def test_invalid_position_multiplier_configuration_is_rejected(self):
+        config = load_config()
+        with self.assertRaises(ValueError):
+            replace(config, position_multipliers=(1.30,) * 7).validate()
+        with self.assertRaises(ValueError):
+            replace(config, position_multipliers=(1.30, 1.18, 1.08, 1.00, 0.90, 0.82, 0.76, 0.0)).validate()
+
+    def test_campaign_requires_positive_conversion_value(self):
+        config = load_config()
+        invalid_brands = ({**config.brands[0], 'conversion_value_cents': 0}, *config.brands[1:])
+        with self.assertRaises(ValueError):
+            replace(config, brands=invalid_brands).validate()
+
+
 class EnvironmentTests(unittest.TestCase):
     def setUp(self):
         self.config = replace(load_config(), sessions=20)

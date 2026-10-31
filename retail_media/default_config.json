@@ -3,11 +3,12 @@
   "campaign_days": 30,
   "block_size": 20,
   "sponsored_slots": [3, 4, 5, 6, 11, 12, 13, 14],
+  "position_multipliers": [1.30, 1.18, 1.08, 1.00, 0.90, 0.82, 0.76, 0.70],
   "categories": ["Tecnología", "Hogar", "Deporte"],
   "brands": [
-    {"name": "Nova", "budget_cents": 400000, "cpc_cents": 120},
-    {"name": "Casa", "budget_cents": 250000, "cpc_cents": 100},
-    {"name": "Pulse", "budget_cents": 150000, "cpc_cents": 80}
+    {"name": "Nova", "budget_cents": 400000, "cpc_cents": 120, "conversion_value_cents": 24000},
+    {"name": "Casa", "budget_cents": 250000, "cpc_cents": 100, "conversion_value_cents": 18000},
+    {"name": "Pulse", "budget_cents": 150000, "cpc_cents": 80, "conversion_value_cents": 14000}
   ],
   "cvr_tolerance": 0.0,
   "minimum_delivery": 0.9,

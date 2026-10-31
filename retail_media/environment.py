@@ -52,6 +52,8 @@ class RetailMediaEnv:
         self.session_counts = self.organic_session_counts.copy()
         self.total_purchases = int(self.organic_purchase.sum())
         self.total_clicks = int(self.organic_click.sum())
+        self.cpc_revenue_cents = 0
+        self.sponsored_conversion_value_cents = 0
         self.decisions = np.flatnonzero(np.isin(self.item_positions, config.sponsored_slots))
         self.sponsored_purchases = 0
 
@@ -126,6 +128,7 @@ class RetailMediaEnv:
         organic_purchase = bool(self.organic_purchase[item])
         clicked, purchase = organic_click, organic_purchase
         brand, cost = -1, 0
+        position_multiplier, sponsored_ctr, conversion_value = 0., 0., 0
         urgency = 0.
         forced = 0 not in self.allowed_actions()
         if action:
@@ -134,13 +137,19 @@ class RetailMediaEnv:
             match = product['category'] == self.item_segments[item]
             affinity = 1.0 if match else .30
             fatigue = max(.55, 1. - .045 * self.session_ads)
-            ctr = (.057 + .027 * product['quality']) * affinity * np.exp(-.018 * (self.position - 1)) * (.88 ** self.item_depths[item]) * fatigue
+            position_multiplier = self.config.position_multiplier(self.position)
+            sponsored_ctr = ((.057 + .027 * product['quality']) * affinity
+                             * np.exp(-.018 * (self.position - 1)) * (.88 ** self.item_depths[item])
+                             * fatigue * position_multiplier)
             purchase_rate = (.065 + .070 * product['quality']) * (1.0 if match else .4)
-            clicked = bool(self.click_draws[item] < ctr)
+            clicked = bool(self.click_draws[item] < sponsored_ctr)
             purchase = bool(clicked and self.purchase_draws[item] < purchase_rate)
             cost = self.config.brands[brand]['cpc_cents'] if clicked else 0
+            conversion_value = self.config.brands[brand]['conversion_value_cents'] if purchase else 0
             urgency = max(0., self.progress - self.spent[brand] / max(1, self.budgets[brand]))
             self.spent[brand] += cost
+            self.cpc_revenue_cents += cost
+            self.sponsored_conversion_value_cents += conversion_value
             self.brand_impressions[brand] += 1
             self.brand_clicks[brand] += int(clicked)
             self.sponsored_purchases += int(purchase)
@@ -156,6 +165,8 @@ class RetailMediaEnv:
                 'segment': int(self.item_segments[item]), 'action': action, 'brand': brand,
                 'clicked': clicked, 'purchase': purchase,
                 'sponsored_click': bool(action and clicked), 'cost_cents': cost,
+                'position_multiplier': position_multiplier, 'sponsored_ctr': sponsored_ctr,
+                'cpc_revenue_cents': cost, 'conversion_value_cents': conversion_value,
                 'forced_pacing': bool(forced and action), 'spent_cents': self.spent.tolist()}
         self.index += 1
         self._allowed_cache = None
@@ -176,6 +187,8 @@ class RetailMediaEnv:
             'sessions': self.config.sessions, 'product_impressions': len(self.item_sessions),
             'sponsored_opportunities': len(self.decisions), 'sponsored_impressions': sponsored,
             'sponsored_clicks': int(self.brand_clicks.sum()),
+            'cpc_revenue_cents': self.cpc_revenue_cents,
+            'sponsored_conversion_value_cents': self.sponsored_conversion_value_cents,
             'session_cvr': float(converted.mean()), 'organic_session_cvr': float(organic.mean()),
             'item_cvr': self.total_purchases / len(self.item_sessions),
             'sponsored_ctr': float(self.brand_clicks.sum()) / max(1, sponsored),

@@ -95,6 +95,36 @@ class EnvironmentTests(unittest.TestCase):
         env.step(action)
         self.assertNotIn(action, env.allowed_actions())
 
+    def test_position_multiplier_changes_sponsored_click_probability(self):
+        top = RetailMediaEnv(self.config, seed=6)
+        lower = RetailMediaEnv(self.config, seed=6)
+        top.item_segments[:] = 0
+        lower.item_segments[:] = 0
+        lower.index = 7  # Slot 14 in the same 20-product block.
+
+        _, _, top_info = top.step(2)  # Nova · Tecnología Plus
+        _, _, lower_info = lower.step(2)
+
+        expected_top_ctr = (.057 + .027) * np.exp(-.018 * 2) * 1.30
+        expected_lower_ctr = (.057 + .027) * np.exp(-.018 * 13) * .70
+        self.assertAlmostEqual(top_info['sponsored_ctr'], expected_top_ctr)
+        self.assertAlmostEqual(lower_info['sponsored_ctr'], expected_lower_ctr)
+        self.assertGreater(top_info['sponsored_ctr'], lower_info['sponsored_ctr'])
+
+    def test_sponsored_events_and_metrics_report_realized_commercial_value(self):
+        env = RetailMediaEnv(self.config, seed=6)
+        env.click_draws.fill(0.0)
+        env.purchase_draws.fill(0.0)
+
+        _, _, info = env.step(2)  # Nova · Tecnología Plus at slot 3
+        metrics = env.metrics()
+
+        self.assertEqual(info['position_multiplier'], 1.30)
+        self.assertEqual(info['cpc_revenue_cents'], 120)
+        self.assertEqual(info['conversion_value_cents'], 24000)
+        self.assertEqual(metrics['cpc_revenue_cents'], 120)
+        self.assertEqual(metrics['sponsored_conversion_value_cents'], 24000)
+
 
 class AgentTests(unittest.TestCase):
     def test_model_rejects_obsolete_state_schema(self):

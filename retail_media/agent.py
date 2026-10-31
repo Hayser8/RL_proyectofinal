@@ -49,6 +49,7 @@ class QAgent:
                 'config_fingerprint': config.fingerprint(),
                 'actions': self.actions, 'alpha': self.alpha, 'gamma': self.gamma,
                 'cvr_multiplier': self.cvr_multiplier}
+        self.metadata = meta
         # JSON keys support variable-length terminal state without object/pickle arrays.
         with path.open('wb') as handle:
             np.savez_compressed(handle, keys=json.dumps(keys),

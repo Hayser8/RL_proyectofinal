@@ -230,6 +230,8 @@ class ExperimentTests(unittest.TestCase):
             agent, history = train(config, episodes=2, seed=7, output=Path(tmp))
             self.assertEqual(len(history), 2)
             self.assertTrue(any(np.any(q != 0) for q in agent.table.values()))
+            self.assertEqual(agent.metadata['state_schema'], 'intent_position_depth_v3')
+            self.assertEqual(agent.metadata['version'], 3)
             self.assertTrue((Path(tmp) / 'model.npz').exists())
             self.assertTrue((Path(tmp) / 'training.csv').exists())
 
@@ -263,6 +265,9 @@ class ExperimentTests(unittest.TestCase):
             self.assertIn('application/json', html)
             self.assertNotIn('__RESULTS__', html)
             self.assertIn('CPC', html)
+            self.assertIn('Mayor CPC', html)
+            self.assertIn('Distribución por posición', html)
+            self.assertIn('position_brand_impressions', html)
             self.assertTrue((Path(tmp) / 'evaluation.csv').exists())
 
     def test_empty_or_training_seed_evaluation_rejected(self):

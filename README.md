@@ -80,14 +80,14 @@ Usa `retail_media/default_config.json` como base para tu configuración. Cambiar
 catálogo, CPC, presupuestos, valor de conversión, posiciones o restricciones invalida el fingerprint del modelo:
 la carga lo rechaza en lugar de usar una política incompatible.
 
-## Resultado histórico del modelo anterior
+## Resultados: referencia previa y evaluación v3
 
 La siguiente evaluación pertenece al modelo anterior, que no distinguía grupos
 de posición en su tabla Q ni usaba valor de conversión. Se conserva como
 referencia del MVP, **no** como resultado de la versión actual. El esquema
 `intent_position_depth_v3` rechaza deliberadamente el artefacto anterior; al
-finalizar los cambios de posicionamiento se entrenará y evaluará un modelo nuevo
-con semillas separadas.
+finalizar los cambios de posicionamiento se entrenó y evaluó un modelo nuevo
+con semillas separadas, reportado a continuación.
 
 Entrenamiento: **120 episodios × 1,000 sesiones**, semilla 42; episodios con
 semillas 42–161. Evaluación final: **30,000 sesiones por política**, en 30 días
@@ -109,6 +109,33 @@ emparejadas de los 30 días, usando Student-t conservadora. **No hubo sobregiros
 las tres marcas superaron el 90% de su cuota diaria en los 30 días de evaluación.
 La heurística de relevancia todavía supera al agente: es una referencia fuerte
 que debe conservarse para futuras iteraciones.
+
+### Evaluación final del esquema v3
+
+La evaluación actual usa el modelo `intent_position_depth_v3`, entrenado durante
+**120 episodios × 1,000 sesiones** (semillas 42–161). Evalúa **30,000 sesiones
+por política** en las semillas 30000–30029, con tráfico y sorteos emparejados.
+Incluye valor de conversión, multiplicadores de posición y los comparadores
+`bid` y `rotation`.
+
+| Política | CVR por sesión | Cambio vs. orgánico | IC 95% del cambio | Entrega media por marca |
+|---|---:|---:|---:|---:|
+| Solo orgánico | 10.55% | — | — | 0% |
+| Aleatorio + pacing | 9.05% | −1.50 pp | [−1.66, −1.34] pp | 99.49% |
+| Relevancia + pacing | **11.78%** | **+1.23 pp** | [+1.08, +1.38] pp | 99.57% |
+| Mayor CPC + pacing | 9.22% | −1.33 pp | [−1.51, −1.15] pp | 99.57% |
+| Rotación + relevancia | 10.41% | −0.13 pp | [−0.29, +0.03] pp | 99.57% |
+| Q sin entrenar + pacing | 9.09% | −1.45 pp | [−1.67, −1.24] pp | 99.52% |
+| Q-learning v3 + pacing | 10.37% | −0.18 pp | [−0.40, +0.04] pp | 99.57% |
+
+No hubo sobregiros en ninguna política. El comparador `bid`, que privilegia el
+CPC de Nova, pierde 1.33 pp de CVR: evidencia que pagar más no debe bastar para
+asignar un espacio visible. La política RL obtiene mejor CVR y valor de
+conversión que `bid`, `random` y Q sin entrenar, pero **no demuestra aún
+protección de CVR frente al baseline orgánico**, y relevancia supera sus
+resultados. Esta es una conclusión negativa válida del experimento: antes de
+usar RL en producción se debe ajustar la función de recompensa/estado y repetir
+la evaluación retenida, en vez de afirmar una mejora no demostrada.
 
 Estos resultados pertenecen al simulador y **no prueban que el agente mantenga
 el CVR de una tienda real**. Las semillas 10000–10019 y 20000–20009 se usaron
@@ -299,7 +326,7 @@ print(env.metrics())
 | `artifacts/model.npz` | Modelo entrenado + metadatos y fingerprint |
 | `artifacts/training.csv`, `training.json` | Curvas de los 120 episodios |
 | `reports/evaluation.json` | Métricas completas, catálogo y trazas de ejemplo |
-| `reports/evaluation.csv` | 150 registros: 5 políticas × 30 días |
+| `reports/evaluation.csv` | 210 registros: 7 políticas × 30 días, incluidas métricas comerciales y distribución por posición |
 | `reports/campaign-rl.json`, `campaign-rl.csv` | Trayectoria completa: 30 días y saldo acumulado por marca |
 | `reports/demo.html` | Reporte autónomo con grid y carga progresiva |
 | `tests/test_mvp.py` | Pruebas de reglas, Q-learning y evaluación |
@@ -322,7 +349,8 @@ genera tráfico nuevo y ejecuta la política cuando se usa `evaluate` o la API.
   renegociar objetivos; no existe una política que garantice ambas cosas siempre.
 - La validación real requiere tráfico aleatorizado, intervalos y un criterio
   de no inferioridad de CVR acordado antes del experimento, además de control
-  de inversión. El objetivo aquí tiene tolerancia cero en media simulada.
+  de inversión. El objetivo aquí tiene tolerancia cero en media simulada; la
+  evaluación v3 actual no supera esa prueba para RL frente a orgánico.
 - La siguiente iteración puede usar logs reales, un modelo de respuesta
   calibrado y reentrenar con un estado que represente la campaña completa; DQN/PPO
   solo se justifican cuando aumente la dimensión del problema.

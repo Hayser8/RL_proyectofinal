@@ -16,10 +16,10 @@ class QAgent:
         self.metadata = {}
 
     def values(self, state):
-        # State aggregation pools sparse purchases across positions, fatigue and
-        # pacing phases. Intent and scroll depth remain distinct. Other observed
-        # dimensions still determine legal actions in the operational controller.
-        key = (int(state[0]), int(state[2])) if len(state) == 6 else tuple(state)
+        # State aggregation shares sparse feedback only within the same intent,
+        # sponsored-position group and scroll depth. Fatigue and pacing still
+        # determine legal actions through the operational controller.
+        key = (int(state[0]), int(state[1]), int(state[2])) if len(state) == 6 else tuple(state)
         if key not in self.table:
             self.table[key] = np.zeros(self.actions, dtype=np.float64)
         return self.table[key]
@@ -45,7 +45,7 @@ class QAgent:
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
         keys = list(self.table)
-        meta = {**self.metadata, 'version': 2, 'state_schema': 'intent_depth_v1',
+        meta = {**self.metadata, 'version': 3, 'state_schema': 'intent_position_depth_v3',
                 'config_fingerprint': config.fingerprint(),
                 'actions': self.actions, 'alpha': self.alpha, 'gamma': self.gamma,
                 'cvr_multiplier': self.cvr_multiplier}
@@ -59,7 +59,8 @@ class QAgent:
     def load(cls, path, config, seed=0):
         with np.load(path, allow_pickle=False) as data:
             meta = json.loads(str(data['metadata']))
-            if meta.get('version') != 2 or meta.get('state_schema') != 'intent_depth_v1' or meta['config_fingerprint'] != config.fingerprint():
+            if (meta.get('version') != 3 or meta.get('state_schema') != 'intent_position_depth_v3'
+                    or meta['config_fingerprint'] != config.fingerprint()):
                 raise ValueError('El modelo no corresponde al catálogo/configuración; vuelve a entrenar')
             agent = cls(meta['actions'], seed, meta['alpha'], meta['gamma'])
             keys = json.loads(str(data['keys']))

@@ -159,15 +159,11 @@ class RetailMediaEnv:
         self.session_counts[session] += int(purchase) - int(organic_purchase)
         self.total_purchases += int(purchase) - int(organic_purchase)
         self.total_clicks += int(clicked) - int(organic_click)
-        reward = (100. + self.cvr_multiplier) * int(purchase) + (.20 + 4. * urgency) * cost / 100.
-        info = {'session': session, 'block': int(self.item_depths[item]),
-                'position': self.position, 'absolute_position': int(self.item_depths[item]) * 20 + self.position,
-                'segment': int(self.item_segments[item]), 'action': action, 'brand': brand,
-                'clicked': clicked, 'purchase': purchase,
-                'sponsored_click': bool(action and clicked), 'cost_cents': cost,
-                'position_multiplier': position_multiplier, 'sponsored_ctr': sponsored_ctr,
-                'cpc_revenue_cents': cost, 'conversion_value_cents': conversion_value,
-                'forced_pacing': bool(forced and action), 'spent_cents': self.spent.tolist()}
+        conversion_value_reward = conversion_value / 100.
+        cpc_revenue_reward = (.20 + 4. * urgency) * cost / 100.
+        cvr_protection_reward = self.cvr_multiplier * int(purchase)
+        delivery_shortfall_penalty = 0.
+        reward = conversion_value_reward + cpc_revenue_reward + cvr_protection_reward
         self.index += 1
         self._allowed_cache = None
         if self.index % 8 == 0:
@@ -176,7 +172,21 @@ class RetailMediaEnv:
             self.session_ads = 0
         if self.done:
             shortfall = np.maximum(0, self.config.minimum_delivery - self.spent / np.maximum(1, self.budgets))
-            reward -= 4 * float(np.mean(shortfall))
+            delivery_shortfall_penalty = 4 * float(np.mean(shortfall))
+            reward -= delivery_shortfall_penalty
+        info = {'session': session, 'block': int(self.item_depths[item]),
+                'position': int(self.item_positions[item]),
+                'absolute_position': int(self.item_depths[item]) * 20 + int(self.item_positions[item]),
+                'segment': int(self.item_segments[item]), 'action': action, 'brand': brand,
+                'clicked': clicked, 'purchase': purchase,
+                'sponsored_click': bool(action and clicked), 'cost_cents': cost,
+                'position_multiplier': position_multiplier, 'sponsored_ctr': sponsored_ctr,
+                'cpc_revenue_cents': cost, 'conversion_value_cents': conversion_value,
+                'reward_components': {'conversion_value': conversion_value_reward,
+                                      'cpc_revenue': cpc_revenue_reward,
+                                      'cvr_protection': cvr_protection_reward,
+                                      'delivery_shortfall_penalty': delivery_shortfall_penalty},
+                'forced_pacing': bool(forced and action), 'spent_cents': self.spent.tolist()}
         return self.state(), reward, info
 
     def metrics(self):

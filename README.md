@@ -1,9 +1,10 @@
 # Retail media con aprendizaje por refuerzo
 
-MVP para una entrega parcial: un agente **Q-learning ya entrenado** elige qué
-producto patrocinado mostrar en un grid de retail media. Busca conservar el CVR
-de la web y entregar inversión a cada marca mediante cobro **CPC** y pacing.
-Todo el tráfico, catálogo, marcas y comportamiento son sintéticos.
+Simulador de retail media en evolución: un agente **Q-learning** elige qué
+producto patrocinado mostrar en un grid de posiciones comerciales. Busca
+equilibrar valor de conversión, ingreso por **CPC**, CVR web y entrega de
+inversión por campaña mediante pacing. Todo el tráfico, catálogo, marcas y
+comportamiento son sintéticos.
 
 **Demo lista para abrir:** [reports/demo.html](reports/demo.html). Descarga el
 repositorio y abre ese archivo en tu navegador: funciona sin servidor, internet
@@ -12,9 +13,12 @@ ni instalación de Python. GitHub muestra el código del HTML, no ejecuta la dem
 ## Qué incluye
 
 - Bloques de **20 productos**; únicamente los spots **3, 4, 5, 6, 11, 12, 13 y 14**
-  admiten patrocinados. La numeración es desde 1 y se repite por bloque.
+  admiten patrocinados. La posición 1 siempre es orgánica; la numeración se
+  repite por bloque.
 - Tres intenciones/categorías, tres marcas y 18 productos patrocinados.
 - Acción de conservar el orgánico o elegir un producto patrocinado.
+- Multiplicadores de visibilidad por posición patrocinada y valor de conversión
+  por campaña; la posición 3 es más visible que la 14.
 - Presupuestos monetarios en centavos, cobro solo por clic, prevención de
   sobregiros y de patrocinados duplicados en un mismo bloque.
 - Pacing que limita adelantos y exige oportunidades para marcas atrasadas.
@@ -22,7 +26,7 @@ ni instalación de Python. GitHub muestra el código del HTML, no ejecuta la dem
   y tráfico variable, incluidos días sin visitas.
 - Modelo guardado, curvas de entrenamiento, cinco políticas de comparación,
   exportaciones CSV/JSON y una demo que reproduce decisiones del modelo.
-- 26 pruebas automatizadas sin dependencias adicionales de testing.
+- 33 pruebas automatizadas sin dependencias adicionales de testing.
 
 El MP4 que estaba en la carpeta fue eliminado y se agregó `*.mp4` a `.gitignore`.
 El video no estaba versionado, por lo que no hay que limpiar historial de Git.
@@ -36,7 +40,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
 
-# Usar el modelo entregado y regenerar evaluación + demo
+# Evaluar requiere un modelo entrenado con la configuración y esquema actuales
 python -m retail_media evaluate
 
 # Entrenar desde cero y luego evaluar (120 episodios)
@@ -62,15 +66,22 @@ python -m retail_media campaign --traffic-file config/campaign_traffic.json
 python -m retail_media run --episodes 5 --sessions 100 \
   --artifacts artifacts/smoke --reports reports/smoke
 
-# Cambiar presupuestos o CPC requiere volver a entrenar
+# Cambiar campañas, multiplicadores o el esquema requiere volver a entrenar
 python -m retail_media run --config mi_config.json
 ```
 
 Usa `retail_media/default_config.json` como base para tu configuración. Cambiar
-catálogo, CPC, presupuestos o restricciones invalida el fingerprint del modelo:
+catálogo, CPC, presupuestos, valor de conversión, posiciones o restricciones invalida el fingerprint del modelo:
 la carga lo rechaza en lugar de usar una política incompatible.
 
-## Resultado del modelo entregado
+## Resultado histórico del modelo anterior
+
+La siguiente evaluación pertenece al modelo anterior, que no distinguía grupos
+de posición en su tabla Q ni usaba valor de conversión. Se conserva como
+referencia del MVP, **no** como resultado de la versión actual. El esquema
+`intent_position_depth_v3` rechaza deliberadamente el artefacto anterior; al
+finalizar los cambios de posicionamiento se entrenará y evaluará un modelo nuevo
+con semillas separadas.
 
 Entrenamiento: **120 episodios × 1,000 sesiones**, semilla 42; episodios con
 semillas 42–161. Evaluación final: **30,000 sesiones por política**, en 30 días
@@ -182,14 +193,17 @@ Una sesión visita 1, 2 o 3 bloques según una distribución sintética de aband
 Esta truncación permite entrenar episodios finitos sobre un patrón de scroll
 que se repite indefinidamente en una implementación real.
 
-**Observación:** intención del usuario, grupo de posiciones, profundidad,
-fatiga publicitaria, fase del día y marca más atrasada.
+**Observación:** intención del usuario, grupo de posiciones patrocinadas,
+profundidad, fatiga publicitaria, fase del día y marca más atrasada. Los grupos
+de posición son 3–6 y 11–14; cada posición conserva además su propio
+multiplicador de visibilidad.
 
-**Estado aprendido:** `(intención, profundidad agrupada)`, seis estados. Se
-comparte experiencia entre posiciones porque las compras son escasas. Las
-demás variables afectan el simulador, las máscaras y el pacing, pero no crean
-filas Q adicionales. Esta abstracción no es un estado Markov completo: es una
-aproximación deliberada del MVP, sin garantías de convergencia óptima.
+**Estado aprendido:** `(intención, grupo_de_posición, profundidad agrupada)`,
+doce estados. Así el agente puede aprender valores diferentes para ubicaciones
+de mayor y menor visibilidad sin multiplicar innecesariamente la tabla por cada
+variable operativa. Fatiga, fase y pacing afectan el simulador y las máscaras,
+pero no crean filas Q adicionales. Esta abstracción no es un estado Markov
+completo: es una aproximación deliberada, sin garantías de convergencia óptima.
 
 **Acciones:** 0 conserva el orgánico; 1–18 eligen productos patrocinados. Las
 acciones imposibles por saldo, repetición o pacing se excluyen antes de decidir.
@@ -199,8 +213,9 @@ Las cuatro políticas comerciales comparten el mismo controlador de pacing.
 **Recompensa por oportunidad:**
 
 ```text
-r = (100 + λ_CVR) × compra
-    + (0.20 + 4 × atraso_de_marca) × gasto_CPC_en_USD
+r = valor_de_conversión_en_USD
+    + (0.20 + 4 × atraso_de_marca) × ingreso_CPC_en_USD
+    + λ_CVR × compra
 
 Al terminar el día:
 r_final -= 4 × promedio(max(0, 0.90 − proporción_de_presupuesto_entregada))
@@ -209,10 +224,13 @@ r_final -= 4 × promedio(max(0, 0.90 − proporción_de_presupuesto_entregada))
 ```
 
 `compra` es una observación binaria, posterior a un clic; se simulan tanto
-clics como compras. La recompensa de compra por producto es una señal densa
-aproximada para el objetivo de conversión de sesión. **CVR web siempre se evalúa
-como sesiones con ≥1 compra / sesiones**, no como compras / impresiones.
-También se exportan CVR por impresión, CTR patrocinado y tasa de ocupación.
+clics como compras. El valor de conversión se acredita únicamente cuando existe
+una compra patrocinada y el ingreso CPC únicamente cuando existe clic. El
+desglose de recompensa queda registrado por decisión para poder auditar cuánto
+provino de conversión, CPC, protección de CVR o penalización de entrega. **CVR
+web siempre se evalúa como sesiones con ≥1 compra / sesiones**, no como compras
+/ impresiones. También se exportan CVR por impresión, CTR patrocinado y tasa de
+ocupación.
 
 La tabla se actualiza con Q-learning, α = 0.01, γ = 0.8 y exploración epsilon-greedy
 de 0.95 a 0.10 durante entrenamiento. La penalización adaptativa es empírica:
@@ -244,9 +262,9 @@ print(env.metrics())
 
 | Archivo | Contenido |
 |---|---|
-| `retail_media/default_config.json` | Presupuestos, CPC y parámetros editables |
-| `retail_media/environment.py` | Tráfico, respuestas, grid, saldo y pacing |
-| `retail_media/agent.py` | Q-learning y persistencia sin pickle |
+| `retail_media/default_config.json` | Presupuestos, CPC, valor de conversión y multiplicadores de posición |
+| `retail_media/environment.py` | Tráfico, respuestas, grid, saldo, pacing y valor comercial por decisión |
+| `retail_media/agent.py` | Q-learning sensible al grupo de posición y persistencia sin pickle |
 | `retail_media/experiment.py` | Entrenamiento, políticas y evaluación emparejada |
 | `retail_media/campaign.py` | Saldo continuo, recuperación de atrasos y evaluación de campaña |
 | `config/campaign_traffic.json` | Escenario de tráfico diario, incluido un día sin visitas |

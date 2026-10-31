@@ -119,11 +119,24 @@ class EnvironmentTests(unittest.TestCase):
         _, _, info = env.step(2)  # Nova · Tecnología Plus at slot 3
         metrics = env.metrics()
 
+        self.assertEqual(info['position'], 3)
         self.assertEqual(info['position_multiplier'], 1.30)
         self.assertEqual(info['cpc_revenue_cents'], 120)
         self.assertEqual(info['conversion_value_cents'], 24000)
         self.assertEqual(metrics['cpc_revenue_cents'], 120)
         self.assertEqual(metrics['sponsored_conversion_value_cents'], 24000)
+
+    def test_reward_reports_conversion_revenue_and_cvr_protection_components(self):
+        env = RetailMediaEnv(self.config, seed=6, cvr_multiplier=7.0)
+        env.click_draws.fill(0.0)
+        env.purchase_draws.fill(0.0)
+
+        _, reward, info = env.step(2)  # Nova · Tecnología Plus at slot 3
+
+        self.assertEqual(info['reward_components']['conversion_value'], 240.0)
+        self.assertEqual(info['reward_components']['cpc_revenue'], 0.24)
+        self.assertEqual(info['reward_components']['cvr_protection'], 7.0)
+        self.assertEqual(reward, 247.24)
 
 
 class AgentTests(unittest.TestCase):
@@ -137,13 +150,25 @@ class AgentTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 QAgent.load(path, config)
 
-    def test_related_positions_share_experience_but_not_user_intent(self):
+    def test_model_rejects_position_agnostic_state_schema(self):
+        config = load_config()
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'position_agnostic.npz'
+            metadata = {'version': 2, 'state_schema': 'intent_depth_v1',
+                        'config_fingerprint': config.fingerprint(), 'actions': 19,
+                        'alpha': .01, 'gamma': .8, 'cvr_multiplier': 0}
+            np.savez(path, keys=json.dumps([[0, 0]]), values=np.zeros((1, 19)), metadata=json.dumps(metadata))
+            with self.assertRaises(ValueError):
+                QAgent.load(path, config)
+
+    def test_position_groups_keep_distinct_q_values_for_the_same_intent(self):
         agent = QAgent()
         first = (0, 0, 0, 0, 0, 1)
         later = (0, 1, 0, 1, 2, 2)
         other_intent = (1, 0, 0, 0, 0, 1)
         agent.update(first, 2, 5., later, [0], done=True)
-        self.assertGreater(agent.values(later)[2], 0)
+        self.assertGreater(agent.values(first)[2], 0)
+        self.assertEqual(agent.values(later)[2], 0)
         self.assertEqual(agent.values(other_intent)[2], 0)
 
     def test_q_update_learns_reward_and_masks_invalid_action(self):

@@ -10,6 +10,40 @@ comportamiento son sintéticos.
 repositorio y abre ese archivo en tu navegador: funciona sin servidor, internet
 ni instalación de Python. GitHub muestra el código del HTML, no ejecuta la demo.
 
+## Estado operativo del proyecto
+
+Esta sección organiza el proyecto con una estructura **inspirada en ITIL**:
+define el servicio, su estado, evidencias, riesgos y trabajo pendiente. No es
+una certificación ITIL; es una bitácora operativa para que el equipo pueda
+presentar y continuar el proyecto sin perder contexto.
+
+### Servicio y objetivo
+
+| Elemento | Estado actual |
+|---|---|
+| Servicio | Simulador reproducible de retail media con aprendizaje por refuerzo. |
+| Decisión automatizada | Conservar contenido orgánico o escoger uno de 18 productos patrocinados en los spots 3–6 y 11–14. La posición 1 permanece orgánica. |
+| Objetivo comercial | Equilibrar valor de conversión, ingreso CPC, relevancia, CVR y entrega de inversión; **mayor CPC no garantiza mejor posición**. |
+| Técnica | Q-learning tabular con acciones enmascaradas, pacing y evaluación emparejada. |
+| Datos | Catálogo, usuarios, clics, compras y presupuestos completamente sintéticos. |
+| Versión del modelo actual | Esquema `intent_position_depth_v3`, 120 episodios, semilla de entrenamiento 42. |
+| Estado técnico | Operativo y reproducible: 35/35 pruebas automatizadas pasan. |
+| Estado de calidad | Ámbar: el modelo RL v3 entrega presupuesto sin sobregiros, pero todavía no demuestra no-inferioridad de CVR frente al baseline orgánico. |
+
+### Registro de configuración y cambios
+
+| Cambio | Estado | Impacto |
+|---|---|---|
+| Pacing y presupuesto CPC | Implementado | Evita sobregiros y recupera inversión pendiente. |
+| Campaña continua | Implementado | Arrastra saldo no gastado entre días y soporta días sin tráfico. |
+| Multiplicadores de posición | Implementado | Las ubicaciones superiores tienen más visibilidad simulada. |
+| Valor de conversión por marca | Implementado | Distingue una venta de alto y bajo valor en la recompensa. |
+| Estado Q sensible a posición | Implementado | RL distingue grupo de posiciones 3–6 de 11–14. |
+| Baselines `bid` y `rotation` | Implementado | Permiten contrastar pago máximo, distribución y RL. |
+| Reporte de distribución marca × posición | Implementado | La demo muestra `Mayor CPC` frente a RL por cada spot. |
+| Reentrenamiento final v3 | Ejecutado | Modelo y reportes regenerados con semillas separadas. |
+| Historial de prompts | Fuera del código por decisión del equipo | Debe elaborarse colaborativamente para el documento final. |
+
 ## Qué incluye
 
 - Bloques de **20 productos**; únicamente los spots **3, 4, 5, 6, 11, 12, 13 y 14**
@@ -33,7 +67,68 @@ ni instalación de Python. GitHub muestra el código del HTML, no ejecuta la dem
 El MP4 que estaba en la carpeta fue eliminado y se agregó `*.mp4` a `.gitignore`.
 El video no estaba versionado, por lo que no hay que limpiar historial de Git.
 
-## Ejecutar
+## Ejecutar la demo y reproducir el experimento
+
+### Demo sin instalar nada
+
+1. Descarga o clona el repositorio completo para conservar `reports/`,
+   `artifacts/` y el catálogo de resultados.
+2. Abre [reports/demo.html](reports/demo.html) desde el explorador de archivos
+   o con cualquier navegador moderno.
+3. En el selector **Política**, compara `Mayor CPC`, `Relevancia`, `Rotación` y
+   `Agente entrenado`; luego revisa la sección **Distribución por posición**.
+
+El HTML es autónomo: no abre un servidor, no necesita internet y reproduce
+trazas finitas guardadas. No calcula nuevas decisiones dentro del navegador.
+
+### Windows PowerShell
+
+```powershell
+# Desde la raíz del repositorio
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+
+# Evita problemas de caracteres como ε y Δ en algunas consolas Windows
+$env:PYTHONUTF8 = "1"
+
+# Validación completa
+python -m unittest discover -s tests -v
+
+# Reutiliza artifacts/model.npz y regenera reports/evaluation.* + reports/demo.html
+python -m retail_media evaluate --eval-seed 30000 --eval-runs 30
+
+# Abre la demo local
+Start-Process reports\demo.html
+```
+
+### macOS / Linux
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+PYTHONUTF8=1 python -m unittest discover -s tests -v
+PYTHONUTF8=1 python -m retail_media evaluate --eval-seed 30000 --eval-runs 30
+open reports/demo.html  # macOS; usa xdg-open en Linux
+```
+
+### Operaciones reproducibles
+
+| Objetivo | Comando | Efecto |
+|---|---|---|
+| Validar código | `python -m unittest discover -s tests -v` | Ejecuta las 35 pruebas. |
+| Evaluar modelo actual | `python -m retail_media evaluate --eval-seed 30000 --eval-runs 30` | Regenera JSON, CSV y demo desde el modelo guardado. |
+| Entrenar y evaluar desde cero | `python -m retail_media run --episodes 120 --seed 42 --eval-seed 30000 --eval-runs 30` | Sobrescribe `artifacts/` y `reports/` con un experimento reproducible. |
+| Campaña continua | `python -m retail_media campaign` | Genera saldo acumulado y reporte diario. |
+| Probar mayor CPC | `python -m retail_media campaign --policy bid` | Ejecuta la campaña con el ranking de CPC. |
+| Probar rotación | `python -m retail_media campaign --policy rotation` | Ejecuta la campaña con reparto de impresiones. |
+
+> **Control de cambio:** entrenar con una configuración distinta cambia el
+> fingerprint y vuelve incompatible el modelo anterior por diseño. Guarda los
+> resultados actuales en una rama, commit o carpeta separada antes de experimentar.
+
+## Referencia rápida de CLI
 
 Python 3.11 o superior. Solo se requiere NumPy; no se necesita GPU.
 
@@ -337,7 +432,7 @@ Es una **reproducción finita de decisiones reales del modelo**, no inferencia
 en JavaScript ni un frontend conectado a una tienda. El simulador Python sí
 genera tráfico nuevo y ejecuta la política cuando se usa `evaluate` o la API.
 
-## Límites y siguiente entrega
+## Riesgos, límites y trabajo pendiente
 
 - Respuestas simplificadas: la relevancia, posición y fatiga afectan clics y
   compras; la profundidad de scroll se fija antes de actuar. No se modela todavía
@@ -354,6 +449,17 @@ genera tráfico nuevo y ejecuta la política cuando se usa `evaluate` o la API.
 - La siguiente iteración puede usar logs reales, un modelo de respuesta
   calibrado y reentrenar con un estado que represente la campaña completa; DQN/PPO
   solo se justifican cuando aumente la dimensión del problema.
+
+### Registro de riesgos e incidencias conocidas
+
+| Riesgo / incidencia | Severidad | Estado | Mitigación actual |
+|---|---|---|---|
+| RL v3 no supera CVR orgánico | Alta para afirmar éxito de RL | Abierto | Reportar el resultado negativo; comparar contra relevancia; ajustar recompensa/estado antes de reclamar mejora. |
+| Mayor CPC reduce CVR | Alta para un ranking solo comercial | Demostrado | Mantener `bid` como baseline de control, no como política recomendada. |
+| Simulador no representa usuarios reales | Alta para despliegue real | Abierto | No hacer afirmaciones de producción; requerir A/B, holdout orgánico y datos calibrados. |
+| Pérdida de presupuesto por falta de clics | Media | Gestionado | Pacing, campaña continua y reporte de saldo residual. |
+| Artefacto incompatible tras cambiar configuración | Baja / esperada | Gestionado | Fingerprint y esquema v3 rechazan cargas incompatibles; reentrenar de forma explícita. |
+| Caracteres Unicode en consola Windows | Baja | Gestionado | Usar `$env:PYTHONUTF8 = "1"` antes de entrenar o probar. |
 
 Referencias conceptuales: [Watkins y Dayan, Q-learning (1992)](https://www.gatsby.ucl.ac.uk/~dayan/papers/cjch.pdf)
 y [Achiam et al., Constrained Policy Optimization (2017)](https://proceedings.mlr.press/v70/achiam17a.html).

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173453">
+  <title>Retail Media Lab</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/Figtree.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="/app.css">
+  <script src="/catalogue-images.js" defer></script>
+  <script src="/lesson.js" defer></script>
+  <script src="/clusters.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="#simulation" aria-label="Retail Media Lab, simulación">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="3" width="11" height="11" rx="3"/><rect x="18" y="3" width="11" height="11" rx="3"/><rect x="3" y="18" width="11" height="11" rx="3"/><path d="M18 24h11m-5-5v10"/></svg>
+        <span>retail media<strong>lab.</strong></span>
+      </a>
+      <nav aria-label="Secciones">
+        <button class="nav-item active" data-view="simulation" aria-current="page"><span data-icon="grid"></span>Simulación</button>
+        <button class="nav-item" data-view="results"><span data-icon="chart"></span>Resultados</button>
+        <button class="nav-item" data-view="model"><span data-icon="layers"></span>Modelo</button>
+      </nav>
+    </aside>
+
+    <main id="main" tabindex="-1">
+      <header class="page-header">
+        <div><h1 id="page-title">Simulación</h1><p id="page-description" hidden></p></div>
+        <span class="synthetic-badge"><span data-icon="flask"></span>Datos sintéticos</span>
+      </header>
+      <div id="error-banner" class="error-banner" role="alert" hidden><span data-icon="alert"></span><span id="error-text"></span><button id="retry-button" type="button">Reintentar</button></div>
+
+      <section id="simulation-view" class="view" aria-label="Simulación interactiva">
+        <form id="experiment-form" class="experiment-config">
+          <div class="field scenario-field"><label for="scenario">Escenario</label><select id="scenario"><option value="balanced">Tráfico equilibrado</option><option value="clickbait">Muchos clics, pocas compras</option><option value="scarce">Tráfico escaso</option><option value="shift">Cambio de audiencia</option></select></div>
+          <span id="active-policy" class="active-policy">Agente entrenado</span>
+          <details id="settings" class="settings"><summary>Ajustes</summary><div class="settings-fields">
+            <div class="field"><label for="policy">Política</label><select id="policy"><option value="safe_rl">Agente entrenado</option><option value="greedy">Compra inmediata</option><option value="quality">Relevancia + calidad</option><option value="relevance">Relevancia y reseñas</option><option value="bid">Puja más alta</option><option value="random">Aleatorio</option><option value="organic">Solo orgánico</option></select></div>
+            <div class="field"><label for="seed">Semilla</label><input id="seed" type="number" min="0" max="4294967295" value="2026" required></div>
+            <div class="field"><label for="session-count">Sesiones</label><select id="session-count"><option value="250">250</option><option value="1000" selected>1,000</option><option value="3000">3,000</option></select></div>
+            <div class="field"><label for="budget-scale">Presupuesto</label><select id="budget-scale"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></div>
+            <div class="field settings-speed"><label for="speed">Ritmo automático</label><select id="speed"><option value="1">8 s por etapa</option><option value="8">15 s por etapa</option><option value="200">Resumen: 200 decisiones</option></select></div>
+            <button id="block-button" class="button secondary" type="button">Avanzar 8 decisiones</button>
+          </div></details>
+          <button class="button quiet" type="submit" id="reset-button"><span data-icon="refresh"></span>Reiniciar</button>
+        </form>
+        <p id="traffic-note" class="traffic-note" hidden></p>
+
+        <section class="lesson-panel" aria-labelledby="lesson-heading">
+          <div class="lesson-heading"><h2 id="lesson-heading">Sigamos una decisión</h2><span id="lesson-location"></span></div>
+          <p id="lesson-intro">Avanza a tu ritmo: primero veremos la visita, después las opciones y al final la decisión.</p>
+          <ol class="lesson-stages" id="lesson-stages" aria-label="Etapas de la explicación" hidden>
+            <li><button type="button" data-phase="0">Contexto</button></li><li><button type="button" data-phase="1">Opciones</button></li><li><button type="button" data-phase="2">Resultado</button></li>
+          </ol>
+          <div id="lesson-body" hidden></div>
+        <div class="playback-bar">
+          <div class="playback-actions"><button id="step-button" class="button primary" type="button"><span data-icon="step"></span><span id="step-label">Comenzar recorrido</span></button><button id="play-button" class="button secondary" type="button"><span data-icon="play"></span><span id="play-label">Automático</span></button></div>
+          <span class="progress-label" id="progress-label">Preparando…</span>
+          <progress id="simulation-progress" value="0" max="1" aria-label="Progreso de la simulación"></progress>
+        </div>
+          <p id="lesson-status" class="lesson-status">Pausada. Tú decides cuándo continuar.</p>
+        </section>
+
+        <div class="metric-strip" role="group" aria-label="Métricas observadas">
+          <div><span class="metric-label">Conversión</span><strong id="metric-cvr">—</strong><span>Orgánico <span id="metric-organic">—</span></span><span id="metric-cvr-note" class="sr-only"></span></div>
+          <div><span class="metric-label">Cambio vs. orgánico</span><strong id="metric-delta">—</strong><span id="metric-delta-note">Sin sesiones cerradas</span></div>
+          <div><span class="metric-label">Gasto CPC · USD</span><strong id="metric-spend">$0.00</strong><span id="metric-spend-note"></span></div>
+        </div>
+
+        <div class="workspace">
+          <section class="store-panel" aria-label="Grid de productos">
+            <div class="store-header"><div><h2>Productos</h2><p id="session-context">Preparando sesión</p></div><div class="store-badge" id="intent-badge">—</div></div>
+            <details class="position-details"><summary>Ver posiciones patrocinables</summary><div class="slot-overview" id="slot-overview" role="group" aria-label="Mapa de las 20 posiciones"></div><div class="store-legend"><span><i class="legend-key sponsored-key"></i>Patrocinable</span><span><i class="legend-key selected-key"></i>Última decisión</span><span id="observed-label"></span></div></details>
+            <div class="product-scroll" id="product-scroll" role="region" tabindex="0" aria-label="Productos; desplázate para ver los 20 espacios"><div id="product-grid" class="product-grid" aria-busy="true"><p class="loading-copy">Cargando productos…</p></div><div class="scroll-footer"><button id="continue-scroll" class="text-button" type="button">Seguir con otra decisión<span data-icon="arrow"></span></button></div></div>
+            <div class="store-footer"><span id="grid-caption">0 / 20 vistos</span><span>Azul: espacio que estamos explicando</span></div>
+          </section>
+          <details id="decision-details" class="decision-panel disclosure">
+            <summary><span>Detalle técnico de la decisión</span><span id="decision-summary" class="summary-meta">Sin decisiones</span></summary>
+            <div class="disclosure-body">
+              <p id="decision-empty" class="empty-copy">Completa una decisión para consultar todos sus detalles.</p>
+              <div id="decision-content" hidden>
+                <div class="decision-location"><span id="decision-position"></span><span id="decision-policy"></span></div>
+                <h3 id="decision-product"></h3><p id="decision-reason" class="decision-reason"></p>
+                <div id="decision-tags" class="decision-tags"></div>
+                <div class="decision-outcome"><div><span>Recompensa</span><strong id="decision-reward">0</strong></div><div><span>Cobro CPC</span><strong id="decision-cost">$0.00</strong></div></div>
+                <details class="candidate-details"><summary>Comparar candidatos</summary><p class="caption">Valor estimado de sesión (0–1)</p><div id="candidate-list" class="candidate-list" role="region" tabindex="0" aria-label="Candidatos y restricciones"></div></details>
+                <p id="conflict-note" class="conflict-note" hidden>El filtro de conversión impide entregar parte de la inversión.</p>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <details class="campaign-panel disclosure"><summary><span>Inversión por marca</span><span id="budget-conflicts" class="summary-meta" hidden></span></summary><div class="disclosure-body"><div id="brand-ledger" class="brand-ledger"></div></div></details>
+        <details class="event-panel disclosure"><summary>Actividad</summary><div class="disclosure-body"><button id="download-button" class="button secondary" type="button"><span data-icon="download"></span>Exportar estado</button><div id="event-log" class="event-log" role="region" tabindex="0" aria-label="Eventos recientes"><p class="empty-copy">Sin clics ni compras.</p></div></div></details>
+        <div id="completion-banner" class="completion-banner" hidden><span data-icon="check"></span><div><h3>Simulación terminada</h3><p id="completion-text"></p></div><button class="button secondary" id="go-results" type="button">Ver resultados</button></div>
+      </section>
+
+      <section id="results-view" class="view reading-view" aria-label="Evaluación del modelo" hidden>
+        <p class="view-intro">¿Ayuda a comprar y cumple con las marcas? Estas pruebas usan visitas simuladas distintas de las de entrenamiento.</p>
+        <div class="results-filter"><div class="field"><label for="evaluation-scenario">Escenario de prueba</label><select id="evaluation-scenario"><option value="balanced">Tráfico equilibrado</option><option value="clickbait">Muchos clics, pocas compras</option><option value="scarce">Tráfico escaso</option><option value="shift">Cambio de audiencia</option></select></div><p id="evaluation-sample"></p></div>
+        <div id="evaluation-status" class="evaluation-status" role="status">Cargando evaluación…</div>
+        <div id="evaluation-highlights" class="evaluation-highlights" hidden></div>
+        <section class="reading-section conclusion-section"><h2>Cómo leer este resultado</h2><div id="evaluation-conclusion"></div></section>
+        <section class="reading-section" aria-labelledby="competition-heading">
+          <h2 id="competition-heading">Winners vs. losers de la misma PLP</h2>
+          <p class="section-copy">Compiten 16 anuncios de esta categoría. Los 8 con mayor valor de conversión estimado forman Winners; los otros 8 forman Losers. Todos tienen una primera exposición si hay tráfico, saldo y evidencia suficientes; después el agente prioriza conversión y ritmo de inversión.</p>
+          <div class="competition-filter"><div class="field"><label for="competition-plp">PLP de categoría</label><select id="competition-plp"><option value="0">Tecnología</option><option value="1">Hogar</option><option value="2">Deporte</option></select></div><div class="field"><label for="competition-scale">Comparar impresiones</label><select id="competition-scale"><option value="total">Total del cluster</option><option value="mean">Promedio por anuncio</option></select></div></div><p id="competition-sample" class="section-copy"></p>
+          <p id="competition-status" class="section-copy" role="status">Cargando impresiones…</p>
+          <button id="competition-retry" class="button secondary" type="button" hidden>Reintentar informe de impresiones</button>
+          <div id="competition-content" hidden>
+            <p id="competition-coverage" class="section-copy"></p>
+            <div id="competition-legend" class="competition-legend"></div>
+            <figure class="competition-figure"><figcaption id="competition-chart-label">Impresiones acumuladas</figcaption><div id="competition-chart"></div></figure>
+            <p id="competition-takeaway" class="section-copy"></p>
+            <details class="technical-details"><summary>Ver los 16 anuncios de esta PLP</summary>
+              <p class="section-copy">Hasta 8 espacios por bloque; cada uno también puede conservar orgánico. Los 16 anuncios pertenecen a esta categoría. El mínimo se cuenta con exposiciones reales; si falta tráfico, saldo o evidencia, se muestra la cobertura pendiente.</p>
+              <div id="competition-bars" class="competition-bars"></div>
+              <p class="section-copy">Cada oportunidad termina en impresión, pérdida entre opciones aptas o exclusión. «Cobertura» prioriza la primera impresión de otro anuncio; «ritmo» recupera una marca atrasada.</p>
+              <div class="table-wrap" role="region" tabindex="0" aria-label="Contabilidad por anuncio; desplazamiento horizontal disponible"><table><caption id="competition-table-caption"></caption><thead><tr><th scope="col">Anuncio</th><th scope="col">Cluster</th><th scope="col">Impresiones</th><th scope="col">Aptas</th><th scope="col">Pierde ranking</th><th scope="col">Pierde por ritmo</th><th scope="col">Pierde por cobertura</th><th scope="col">Exclusiones</th></tr></thead><tbody id="competition-table"></tbody></table></div>
+            </details>
+          </div>
+          <details class="technical-details"><summary>Cómo se equilibra conversión e inversión</summary><div id="competition-balance"></div><p class="section-copy">En CPC se paga por clic. El presupuesto limita y orienta el gasto; no compra una cuota de impresiones. El controlador recupera marcas atrasadas entre anuncios aptos, sin saltarse el filtro de compra. No garantiza presencia para cada anuncio. Este laboratorio usa CPC fijo por marca, no una subasta de precios completa.</p><p class="section-copy">Si se vende una cuota garantizada, debe acordarse como reserva y comprobar capacidad antes de aceptarla. Referencias: <a href="https://m.media-amazon.com/images/G/01/AmazonMarketingServices/PartnerOnboardingGuide/V3/AMZ_BiddingAndTargettingGuide_HP_KT_V5.pdf" target="_blank" rel="noreferrer">puja, relevancia y CPC en Amazon</a>; <a href="https://support.google.com/admanager/answer/177279?hl=en" target="_blank" rel="noreferrer">reservas de impresiones en Ad Manager</a>.</p></details>
+          <details class="technical-details"><summary>Qué significa cada cluster</summary><p class="section-copy">Referencia: visita nueva a esta categoría, espacio 3, primer bloque, sin anuncios previos ni compra. Winners son los 8 anuncios con mayor Q aprendido entre los que tienen soporte del filtro; Losers son los otros 8 del mismo inventario. Es una prioridad relativa: ambos grupos pueden mejorar frente a orgánico. No se clasifican por puja ni por impresiones finales.</p><div id="competition-reference"></div><p class="section-copy">La clasificación es fija y no usa respuestas futuras, puja, presupuesto ni gasto. Al decidir cada espacio, el agente vuelve a evaluar el contexto real y aplica saldo, duplicados y pacing. Primero cubre a cada anuncio apto con una impresión; después concentra exposición por valor estimado. Los menos favorecidos siguen siendo anuncios relevantes de esta PLP. No se añaden recompensas por impresiones o dinero ni se fuerza la forma de las curvas.</p><p class="section-copy">Esta es una réplica descriptiva, separada de la evaluación de ocho semillas. Las curvas acumulan impresiones de todos los bloques de visitas a la misma categoría. El promedio por anuncio divide por todos los integrantes del cluster, incluidos los de cero impresiones. La mejora estimada no demuestra un efecto causal real ni permite atribuir el CVR de toda una visita a un cluster.</p></details>
+        </section>
+        <section class="reading-section"><h2>Comparación con otras formas de elegir</h2><p class="section-copy">Conversión = visitas con al menos una compra por cada 100 visitas. Se compara sobre el mismo tráfico simulado.</p><div id="comparison-chart" class="comparison-chart"></div>
+          <details class="technical-details"><summary>Ver tabla e intervalos de confianza</summary><p class="section-copy">El intervalo del 95% describe la incertidumbre del cambio medio entre semillas. Si incluye cero, no establece una mejora frente a orgánico. «pp» significa puntos porcentuales.</p><div class="table-wrap" role="region" tabindex="0" aria-label="Tabla de evaluación; desplazamiento horizontal disponible"><table><caption>Medias sobre todas las semillas del escenario</caption><thead><tr><th scope="col">Política</th><th scope="col">Conversión</th><th scope="col">Cambio vs. orgánico</th><th scope="col">Intervalo 95%</th><th scope="col">Entrega</th><th scope="col">Conflictos</th></tr></thead><tbody id="evaluation-table"></tbody></table></div><dl class="definition-list"><dt>Entrega</dt><dd>Gasto por clic dividido por el presupuesto asignado. La meta de esta prueba es al menos 90% por marca, en promedio.</dd><dt>Conflicto</dt><dd>Oportunidad en la que una marca necesita entrega pero no tiene una opción que supere el filtro de compra. No es un cobro.</dd><dt>Comparadores</dt><dd>Calidad usa categoría y calidad del producto; compra inmediata usa la probabilidad de compra del evento. El agente planifica el resto de la visita.</dd></dl></details>
+        </section>
+        <p class="evidence-note">Resultados sintéticos: describen este simulador, no garantizan el rendimiento de una tienda real.</p>
+      </section>
+
+      <section id="model-view" class="view reading-view" aria-label="Cómo aprende y decide el modelo" hidden>
+        <p class="view-intro">El agente busca una primera compra por visita. Aprende antes de la demo; durante la simulación aplica lo aprendido y no se reentrena.</p>
+        <section class="reading-section"><h2>Calificación del sistema</h2><p id="model-assessment" class="section-copy">Cargando valoración…</p><details class="technical-details"><summary>Ver rúbrica sobre 100 puntos</summary><p class="section-copy">Valoración técnica propia para esta entrega académica. No es precisión predictiva, probabilidad de éxito ni certificación.</p><div class="table-wrap" role="region" tabindex="0" aria-label="Rúbrica de evaluación del sistema"><table><caption>Antes y después de ampliar a 16 anuncios por PLP</caption><thead><tr><th scope="col">Criterio</th><th scope="col">Antes</th><th scope="col">Actual</th><th scope="col">Máximo</th><th scope="col">Evidencia y límite</th></tr></thead><tbody id="assessment-table"></tbody></table></div></details></section>
+        <section class="reading-section"><h2>De la experiencia a una decisión</h2>
+          <ol class="learning-flow">
+            <li><h3>Practica con visitas simuladas</h3><p>Observa <span id="training-count">—</span> transiciones: qué se mostró, si hubo clic, compra y si la persona siguió navegando.</p></li>
+            <li><h3>Aprende a estimar respuestas</h3><p>Relaciona categoría, posición y anuncios ya vistos con la respuesta a cada producto. Una estimación es una predicción, no una compra garantizada.</p></li>
+            <li><h3>Piensa en el resto de la visita</h3><p>La planificación de Bellman compara el valor de mostrar un producto ahora y las oportunidades que quedan después.</p></li>
+            <li><h3>Respeta las restricciones</h3><p>Descarta anuncios sin saldo, repetidos o fuera de ritmo. El filtro de compra exige evidencia frente al orgánico; el ritmo de entrega intenta dar presencia a marcas atrasadas entre opciones aptas.</p></li>
+          </ol>
+          <details class="technical-details"><summary>Ver formulación técnica</summary><p class="section-copy">RL basado en un modelo de transiciones aprendido, con planificación de Bellman de horizonte finito y sin descuento. La recompensa es 1 para la primera compra de una visita y 0 en los demás eventos.</p><p class="formula">Q(s, a) = E[r + V(siguiente estado)]</p><p class="section-copy">El estado incluye categoría, posición, profundidad de scroll, anuncios vistos y si ya hubo compra. El filtro usa una estimación conservadora de compra inmediata; no es una garantía formal del CVR de sesión.</p></details>
+        </section>
+        <section class="reading-section"><h2>Qué evita que busque atajos</h2><p class="section-copy">Clics, pujas y dinero gastado no dan recompensa. Las siguientes pruebas comprueban ataques concretos; no cubren todos los ataques posibles.</p><p id="checks-count" class="checks-summary" role="status">Verificando evidencia</p><div id="integrity-checks" class="integrity-checks"></div></section>
+        <section class="reading-section"><h2>Cómo se revisó el aprendizaje</h2><p id="training-summary" class="section-copy"></p><details class="technical-details training-details"><summary>Ver error de predicción y datos de reproducción</summary><h3>Error en validación</h3><p class="section-copy">Error Brier de la predicción de compra por evento: cuanto menor, mejor. Esta curva no mide el reward ni sustituye las pruebas de conversión.</p><div id="training-chart" class="training-chart"></div><div class="split-summary" id="seed-splits"></div></details></section>
+        <section class="reading-section"><h2>Lo que todavía no demuestra</h2><ul class="plain-list"><li>Los usuarios y sus respuestas son sintéticos. Falta validar con tráfico real y una prueba A/B.</li><li>Si cambia la audiencia, las estimaciones pueden fallar. Si compra y entrega entran en conflicto, puede quedar inversión pendiente.</li></ul></section>
+        <details class="technical-details glossary"><summary>Consultar términos de la demo</summary><dl class="definition-list"><dt>CVR o conversión</dt><dd>Visitas finalizadas con compra divididas por visitas finalizadas. Las visitas aún abiertas no entran en la métrica.</dd><dt>CPC</dt><dd>Costo por clic. Mostrar un anuncio sin clic cuesta cero.</dd><dt>Recompensa</dt><dd>Señal para aprender: solo la primera compra de una visita suma 1. No representa dólares.</dd><dt>Semilla</dt><dd>Número que permite repetir el experimento. Misma política, semilla y configuración producen la misma trayectoria.</dd><dt>Orgánico</dt><dd>Producto que se mostraría sin publicidad. Dentro del simulador se usa como referencia sobre visitas emparejadas.</dd><dt>Ritmo de entrega</dt><dd>Control de cuánto presupuesto lleva gastado cada marca en relación con el avance de la campaña; también llamado pacing.</dd></dl></details>
+      </section>
+      <footer class="app-footer"><span>Retail Media Lab</span><span id="connection-status">Conectando al motor</span></footer>
+    </main>
+  </div>
+  <div id="announcer" class="sr-only" role="status" aria-live="polite"></div>
+</body>
+</html>

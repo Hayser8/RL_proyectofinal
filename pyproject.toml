@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "retail-media-rl"
-version = "0.1.0"
-description = "MVP de retail media con Q-learning, CPC y pacing"
+version = "0.2.0"
+description = "Laboratorio interactivo de retail media con RL basado en modelo y controles de conversión"
 requires-python = ">=3.11"
 dependencies = ["numpy>=2.1,<3"]
 
@@ -13,4 +13,4 @@ dependencies = ["numpy>=2.1,<3"]
 include = ["retail_media*"]
 
 [tool.setuptools.package-data]
-retail_media = ["default_config.json", "report.html"]
+retail_media = ["default_config.json", "report.html", "web/*", "web/fonts/*", "web/images/*"]

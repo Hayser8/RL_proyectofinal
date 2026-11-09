@@ -1,0 +1,3 @@
+Reproducción del roll original con --from seed:62070e9cbaea0d93
+DEALT INDICES: 4, 6, 3 (index 4 leads)
+SEED REFERENCE: seed:62070e9cbaea0d93. Write this, never the key, wherever the seed is recorded (the surface brief's FORM line, build-phase start --direction); on this machine --from accepts it in place of the key.

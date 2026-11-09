@@ -1,4 +1,154 @@
-# Retail media con aprendizaje por refuerzo
+# Retail Media Lab
+
+Laboratorio local para ejecutar e inspeccionar decisiones de retail media con
+**aprendizaje por refuerzo basado en un modelo de transiciones aprendido**.
+La interfaz combina un grid de 20 productos, reproducción por pasos, inspector
+de candidatos, contabilidad CPC y resultados de evaluación separados del
+entrenamiento. Todos los usuarios, marcas, productos y respuestas son sintéticos.
+
+## Inicio rápido
+
+Desde la raíz del repositorio, con Python 3.11 o superior:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
+python3 -m retail_media lab
+```
+
+Abre **http://127.0.0.1:8765**. Detén el servidor con `Ctrl+C`.
+En Windows, activa el entorno con `.\.venv\Scripts\Activate.ps1`; puedes usar
+`python` en lugar de `python3`. Para cambiar el puerto: `python3 -m retail_media lab --port 8766`.
+
+El modelo entregado es [artifacts/lab_model.npz](artifacts/lab_model.npz).
+La simulación ejecuta inferencia real en Python; requiere el servidor local.
+Solo se necesita NumPy: no usa TensorFlow, PyTorch, una GPU ni una biblioteca de
+RL externa. Fuentes Figtree y fotografías sintéticas de productos se sirven
+localmente; sus archivos de licencia y procedencia están en
+[retail_media/web](retail_media/web). No se requieren servicios web externos
+para ejecutar el laboratorio.
+
+## Recorrido de la demo
+
+Pulsa **Comenzar recorrido**. Cada decisión se explica en tres etapas:
+**Contexto → Opciones → Resultado**. La demo espera tu clic entre etapas;
+las métricas y el producto elegido se revelan en Resultado. El motor usa el
+modelo ya entrenado, no aprende de nuevo durante el recorrido.
+
+**Automático** es opcional. En Ajustes puedes dejar 8 o 15 segundos por etapa,
+o elegir explícitamente el resumen de 200 decisiones. Cambiar de pestaña o
+ocultar la ventana pausa la reproducción. Resultados explica primero las cifras
+y deja la tabla técnica desplegable; Modelo reúne aprendizaje, pruebas y términos.
+
+## Catálogo visual
+
+Cada categoría muestra 20 productos orgánicos distintos, con nombres, precios e
+imágenes propios. Hay 60 SKUs orgánicos y 48 perfiles patrocinados: 16 propios por PLP. El grid
+mantiene cuatro productos por fila en escritorio y tablet, y dos en móvil.
+
+Las fotografías sintéticas se generaron con `image_gen` y se sirven localmente
+desde [images/catalogue](retail_media/web/images/catalogue), con sus prompts y
+procedencia. Las regiones del manifiesto permiten mostrar cada producto sin
+fragmentos de sus vecinos. El nombre de una tarjeta coincide con su candidato,
+la explicación del agente y los eventos exportados.
+
+La variedad pertenece a la capa de presentación: utiliza 16 SKUs anunciables por categoría, además de la acción orgánica. Las imágenes y precios de venta
+no son señales para la política. Los 48 perfiles se reentrenaron con transiciones factuales.
+
+## Qué aprende y cómo decide
+
+Se observaron **900,000 transiciones factuales** con acciones aleatorias en
+estados sintéticos estratificados. Cada transición contiene la respuesta de la
+acción ejecutada: clic, compra y abandono. Un estimador de respuesta aprende
+sus estadísticas y una planificación de **Bellman de horizonte finito, sin
+descuento**, calcula el valor de obtener una primera conversión durante la
+sesión. El horizonte máximo es de tres bloques. No es el Q-learning del
+experimento histórico ni un modelo neuronal.
+
+La recompensa vale **1 solo en la primera compra de la sesión**, con la misma
+regla para orgánico y patrocinado. Compras repetidas, impresiones, clics, CPC,
+pujas y presupuesto consumido no añaden recompensa. El dinero se maneja como
+contabilidad y restricción: se cobra únicamente un clic patrocinado y se exige
+saldo suficiente antes de mostrar el anuncio.
+
+Solo los spots **3, 4, 5, 6, 11, 12, 13 y 14** admiten anuncios. Las máscaras
+respetan presupuesto, repetición en el bloque y pacing. `safe_rl` añade un filtro
+empírico: exige evidencia y compara la estimación patrocinada menos **una
+desviación estándar** con la estimación orgánica puntual. **No es una cota del
+95%, CPO, SPIBB ni una garantía formal de protección del CVR.** Si entrega y
+calidad estimada entran en conflicto, puede quedar inversión pendiente.
+
+## Comparación y evidencia
+
+Siete políticas comparten tráfico y sorteos exógenos por semilla: `organic`,
+`random`, `bid`, `relevance`, `quality`, `greedy` y `safe_rl`. Las dos referencias
+fuertes son `quality` —productos de categoría coincidente y calidad visible,
+con fallback orgánico— y `greedy` —compra inmediata estimada, con el mismo filtro
+que RL, sin planificar el resto de la sesión—. **Un comparador puede empatar o
+superar a RL**; mejorar frente a orgánico no demuestra superioridad frente a
+estas referencias. En el reporte final, los intervalos de RL frente a `quality`
+y `greedy` incluyen cero en los cuatro escenarios: no se ha demostrado
+superioridad sobre ellos.
+
+Hay cuatro escenarios: mercado equilibrado, clics sin intención, tráfico
+escaso y cambio de demanda. La partición usa semilla **1700** para entrenamiento,
+**2700** para validación y **80020–80027** para evaluación final. La política está
+congelada durante evaluación. El CVR es sesiones cerradas con al menos una
+compra / sesiones cerradas; no cuenta resultados futuros. Los intervalos se
+calculan con diferencias emparejadas por día independiente.
+
+Consulta la metodología, resultados y límites en la
+[ficha del modelo](docs/lab-model-card.md), y los datos completos en
+[reports/lab_evaluation.json](reports/lab_evaluation.json) y
+[reports/lab_evaluation.csv](reports/lab_evaluation.csv).
+La [auditoría de interfaz](docs/lab-ui-audit.md) registra accesibilidad, contraste,
+responsive e interacciones probadas. [DESIGN.md](DESIGN.md) documenta el sistema
+visual construido.
+[reports/lab_capacity_600.json](reports/lab_capacity_600.json) conserva una
+exploración previa de capacidad con 600 sesiones solicitadas y otras semillas;
+no sustituye el conjunto final.
+
+## Reproducción y trazabilidad
+
+```bash
+# Pruebas del laboratorio, sin reentrenar el artefacto entregado
+python3 -m unittest discover -s tests -p 'test_lab*.py' -v
+
+# Recalcular evaluación: sobrescribe únicamente los reportes del laboratorio
+python3 -m retail_media evaluate-lab --lab-sessions 1000 --lab-runs 8
+
+# Reentrenar: sobrescribe artifacts/lab_model.npz; después, vuelve a evaluar
+python3 -m retail_media train-lab --lab-observations 900000
+python3 -m retail_media evaluate-lab --lab-sessions 1000 --lab-runs 8
+```
+
+La identidad SHA-256 `model_id` depende de los parámetros aprendidos y de su
+interpretación estructural, no del tiempo de ejecución. El reporte registra
+esa identidad. Si el modelo cambia y el reporte conserva otra identidad,
+`/api/evaluation` responde `stale` hasta regenerar la evaluación. Esto evita
+presentar resultados antiguos como evidencia de la política activa.
+
+La API escucha exclusivamente en **loopback, 127.0.0.1**. Valida entradas,
+acota pasos y simulaciones, bloquea mutaciones de otro origen y sirve solo los
+archivos públicos previstos. Es una aplicación de demostración local; **las
+nueve pruebas dirigidas de integridad no son una auditoría completa de seguridad
+ni demuestran ausencia universal de reward hacking**.
+
+Cada réplica del Lab representa **un día independiente**, con presupuestos
+reiniciados. La campaña histórica de 30 días con arrastre de saldo sigue en
+`python3 -m retail_media campaign`; usa otro motor y otro modelo. Tampoco se
+deben comparar directamente los porcentajes del MVP/v3 y del Lab: cambiaron
+el generador, la recompensa y la dinámica de abandono. Los resultados sintéticos
+no establecen eficacia o seguridad con usuarios reales.
+
+# Experimento anterior
+
+La documentación siguiente conserva la evolución del MVP, el Q-learning v3,
+la demo HTML autónoma y las campañas de 30 días. Sus resultados y artefactos
+pertenecen al motor histórico y mantienen ese alcance.
+
+## Retail media con aprendizaje por refuerzo
 
 Simulador de retail media en evolución: un agente **Q-learning** elige qué
 producto patrocinado mostrar en un grid de posiciones comerciales. Busca
@@ -464,3 +614,25 @@ genera tráfico nuevo y ejecuta la política cuando se usa `evaluate` o la API.
 Referencias conceptuales: [Watkins y Dayan, Q-learning (1992)](https://www.gatsby.ucl.ac.uk/~dayan/papers/cjch.pdf)
 y [Achiam et al., Constrained Policy Optimization (2017)](https://proceedings.mlr.press/v70/achiam17a.html).
 Se implementa Q-learning con un controlador operativo propio; no se implementa CPO.
+
+## Impresiones y calificación en PLP16
+
+Resultados compara ocho winners por valor de conversión aprendido con los otros
+ocho anuncios de la misma categoría. La clasificación se fija antes de simular,
+con 16 candidatos propios por PLP; no usa pujas ni impresiones finales.
+Todos los anuncios aptos reciben una primera exposición antes de concentrarse
+por conversión y pacing. Cobertura inviable se informa, sin inventar eventos.
+
+Los 48 anuncios recibieron exposición en 32/32 ejecuciones evaluadas del agente.
+La réplica equilibrada de Tecnología muestra 1,057 frente a 543 impresiones,
+con mínimo 12 por anuncio. Total y promedio por miembro, causas de exclusión y
+balance de gasto/CVR son visibles en Resultados. La rúbrica técnica propia es
+88/100, frente a 55/100 antes de esta corrección; no es precisión predictiva.
+Los pesos y límites están en Modelo.
+
+Reproducir la réplica: `python3 -m retail_media.lab_competition`.
+[Metodología](docs/lab-impression-allocation.md) y
+[ficha actual del modelo](docs/lab-model-card.md).
+Los antecedentes del Lab están en `reports/archive/lab-v1/` y
+`artifacts/archive/lab_model_v1.npz`; no permiten atribuir causalmente los cambios
+al algoritmo porque se amplió el inventario y cambió el generador.

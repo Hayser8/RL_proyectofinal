@@ -1,0 +1,893 @@
+{
+  "schema": 1,
+  "atlases": {
+    "technology": {
+      "url": "/images/catalogue/technology.webp",
+      "width": 1122,
+      "height": 1402,
+      "columns": 4,
+      "rows": 5
+    },
+    "home": {
+      "url": "/images/catalogue/home.webp",
+      "width": 1122,
+      "height": 1402,
+      "columns": 4,
+      "rows": 5
+    },
+    "sport": {
+      "url": "/images/catalogue/sport.webp",
+      "width": 1122,
+      "height": 1402,
+      "columns": 4,
+      "rows": 5
+    },
+    "sponsored": {
+      "url": "/images/catalogue/sponsored-refined.webp",
+      "width": 1774,
+      "height": 887,
+      "columns": 6,
+      "rows": 3
+    }
+  },
+  "images": {
+    "tech-organic-00": {
+      "atlas": "technology",
+      "column": 0,
+      "row": 0,
+      "bounds": {
+        "left": 3,
+        "top": 3,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "tech-organic-01": {
+      "atlas": "technology",
+      "column": 1,
+      "row": 0,
+      "bounds": {
+        "left": 284,
+        "top": 3,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "tech-organic-02": {
+      "atlas": "technology",
+      "column": 2,
+      "row": 0,
+      "bounds": {
+        "left": 564,
+        "top": 3,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "tech-organic-03": {
+      "atlas": "technology",
+      "column": 3,
+      "row": 0,
+      "bounds": {
+        "left": 845,
+        "top": 3,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "tech-organic-04": {
+      "atlas": "technology",
+      "column": 0,
+      "row": 1,
+      "bounds": {
+        "left": 3,
+        "top": 283,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "tech-organic-05": {
+      "atlas": "technology",
+      "column": 1,
+      "row": 1,
+      "bounds": {
+        "left": 284,
+        "top": 283,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "tech-organic-06": {
+      "atlas": "technology",
+      "column": 2,
+      "row": 1,
+      "bounds": {
+        "left": 564,
+        "top": 283,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "tech-organic-07": {
+      "atlas": "technology",
+      "column": 3,
+      "row": 1,
+      "bounds": {
+        "left": 845,
+        "top": 283,
+        "width": 274,
+        "height": 268
+      }
+    },
+    "tech-organic-08": {
+      "atlas": "technology",
+      "column": 0,
+      "row": 2,
+      "bounds": {
+        "left": 3,
+        "top": 564,
+        "width": 274,
+        "height": 252
+      }
+    },
+    "tech-organic-09": {
+      "atlas": "technology",
+      "column": 1,
+      "row": 2,
+      "bounds": {
+        "left": 284,
+        "top": 564,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "tech-organic-10": {
+      "atlas": "technology",
+      "column": 2,
+      "row": 2,
+      "bounds": {
+        "left": 564,
+        "top": 564,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "tech-organic-11": {
+      "atlas": "technology",
+      "column": 3,
+      "row": 2,
+      "bounds": {
+        "left": 845,
+        "top": 557,
+        "width": 274,
+        "height": 281
+      }
+    },
+    "tech-organic-12": {
+      "atlas": "technology",
+      "column": 0,
+      "row": 3,
+      "bounds": {
+        "left": 3,
+        "top": 822,
+        "width": 274,
+        "height": 297
+      }
+    },
+    "tech-organic-13": {
+      "atlas": "technology",
+      "column": 1,
+      "row": 3,
+      "bounds": {
+        "left": 284,
+        "top": 844,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "tech-organic-14": {
+      "atlas": "technology",
+      "column": 2,
+      "row": 3,
+      "bounds": {
+        "left": 564,
+        "top": 844,
+        "width": 274,
+        "height": 244
+      }
+    },
+    "tech-organic-15": {
+      "atlas": "technology",
+      "column": 3,
+      "row": 3,
+      "bounds": {
+        "left": 845,
+        "top": 844,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "tech-organic-16": {
+      "atlas": "technology",
+      "column": 0,
+      "row": 4,
+      "bounds": {
+        "left": 3,
+        "top": 1125,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "tech-organic-17": {
+      "atlas": "technology",
+      "column": 1,
+      "row": 4,
+      "bounds": {
+        "left": 284,
+        "top": 1125,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "tech-organic-18": {
+      "atlas": "technology",
+      "column": 2,
+      "row": 4,
+      "bounds": {
+        "left": 564,
+        "top": 1094,
+        "width": 274,
+        "height": 305
+      }
+    },
+    "tech-organic-19": {
+      "atlas": "technology",
+      "column": 3,
+      "row": 4,
+      "bounds": {
+        "left": 845,
+        "top": 1125,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "tech-sponsored-00": {
+      "atlas": "sponsored",
+      "column": 0,
+      "row": 0,
+      "bounds": {
+        "left": 33,
+        "top": 121,
+        "width": 259,
+        "height": 155
+      }
+    },
+    "tech-sponsored-01": {
+      "atlas": "sponsored",
+      "column": 1,
+      "row": 0,
+      "bounds": {
+        "left": 348,
+        "top": 61,
+        "width": 209,
+        "height": 231
+      }
+    },
+    "tech-sponsored-02": {
+      "atlas": "sponsored",
+      "column": 2,
+      "row": 0,
+      "bounds": {
+        "left": 642,
+        "top": 104,
+        "width": 190,
+        "height": 188
+      }
+    },
+    "tech-sponsored-03": {
+      "atlas": "sponsored",
+      "column": 3,
+      "row": 0,
+      "bounds": {
+        "left": 903,
+        "top": 127,
+        "width": 255,
+        "height": 161
+      }
+    },
+    "tech-sponsored-04": {
+      "atlas": "sponsored",
+      "column": 4,
+      "row": 0,
+      "bounds": {
+        "left": 1206,
+        "top": 108,
+        "width": 249,
+        "height": 180
+      }
+    },
+    "tech-sponsored-05": {
+      "atlas": "sponsored",
+      "column": 5,
+      "row": 0,
+      "bounds": {
+        "left": 1526,
+        "top": 83,
+        "width": 191,
+        "height": 209
+      }
+    },
+    "home-organic-00": {
+      "atlas": "home",
+      "column": 0,
+      "row": 0,
+      "bounds": {
+        "left": 3,
+        "top": 3,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "home-organic-01": {
+      "atlas": "home",
+      "column": 1,
+      "row": 0,
+      "bounds": {
+        "left": 284,
+        "top": 3,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "home-organic-02": {
+      "atlas": "home",
+      "column": 2,
+      "row": 0,
+      "bounds": {
+        "left": 564,
+        "top": 3,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "home-organic-03": {
+      "atlas": "home",
+      "column": 3,
+      "row": 0,
+      "bounds": {
+        "left": 845,
+        "top": 3,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "home-organic-04": {
+      "atlas": "home",
+      "column": 0,
+      "row": 1,
+      "bounds": {
+        "left": 3,
+        "top": 283,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "home-organic-05": {
+      "atlas": "home",
+      "column": 1,
+      "row": 1,
+      "bounds": {
+        "left": 284,
+        "top": 283,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "home-organic-06": {
+      "atlas": "home",
+      "column": 2,
+      "row": 1,
+      "bounds": {
+        "left": 564,
+        "top": 283,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "home-organic-07": {
+      "atlas": "home",
+      "column": 3,
+      "row": 1,
+      "bounds": {
+        "left": 845,
+        "top": 283,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "home-organic-08": {
+      "atlas": "home",
+      "column": 0,
+      "row": 2,
+      "bounds": {
+        "left": 3,
+        "top": 564,
+        "width": 274,
+        "height": 250
+      }
+    },
+    "home-organic-09": {
+      "atlas": "home",
+      "column": 1,
+      "row": 2,
+      "bounds": {
+        "left": 284,
+        "top": 564,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "home-organic-10": {
+      "atlas": "home",
+      "column": 2,
+      "row": 2,
+      "bounds": {
+        "left": 564,
+        "top": 564,
+        "width": 274,
+        "height": 254
+      }
+    },
+    "home-organic-11": {
+      "atlas": "home",
+      "column": 3,
+      "row": 2,
+      "bounds": {
+        "left": 845,
+        "top": 564,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "home-organic-12": {
+      "atlas": "home",
+      "column": 0,
+      "row": 3,
+      "bounds": {
+        "left": 3,
+        "top": 820,
+        "width": 274,
+        "height": 264
+      }
+    },
+    "home-organic-13": {
+      "atlas": "home",
+      "column": 1,
+      "row": 3,
+      "bounds": {
+        "left": 284,
+        "top": 844,
+        "width": 274,
+        "height": 239
+      }
+    },
+    "home-organic-14": {
+      "atlas": "home",
+      "column": 2,
+      "row": 3,
+      "bounds": {
+        "left": 564,
+        "top": 824,
+        "width": 274,
+        "height": 249
+      }
+    },
+    "home-organic-15": {
+      "atlas": "home",
+      "column": 3,
+      "row": 3,
+      "bounds": {
+        "left": 845,
+        "top": 844,
+        "width": 274,
+        "height": 267
+      }
+    },
+    "home-organic-16": {
+      "atlas": "home",
+      "column": 0,
+      "row": 4,
+      "bounds": {
+        "left": 3,
+        "top": 1090,
+        "width": 274,
+        "height": 309
+      }
+    },
+    "home-organic-17": {
+      "atlas": "home",
+      "column": 1,
+      "row": 4,
+      "bounds": {
+        "left": 284,
+        "top": 1089,
+        "width": 274,
+        "height": 310
+      }
+    },
+    "home-organic-18": {
+      "atlas": "home",
+      "column": 2,
+      "row": 4,
+      "bounds": {
+        "left": 564,
+        "top": 1079,
+        "width": 274,
+        "height": 320
+      }
+    },
+    "home-organic-19": {
+      "atlas": "home",
+      "column": 3,
+      "row": 4,
+      "bounds": {
+        "left": 845,
+        "top": 1117,
+        "width": 274,
+        "height": 282
+      }
+    },
+    "home-sponsored-00": {
+      "atlas": "sponsored",
+      "column": 0,
+      "row": 1,
+      "bounds": {
+        "left": 55,
+        "top": 329,
+        "width": 204,
+        "height": 228
+      }
+    },
+    "home-sponsored-01": {
+      "atlas": "sponsored",
+      "column": 1,
+      "row": 1,
+      "bounds": {
+        "left": 326,
+        "top": 348,
+        "width": 245,
+        "height": 209
+      }
+    },
+    "home-sponsored-02": {
+      "atlas": "sponsored",
+      "column": 2,
+      "row": 1,
+      "bounds": {
+        "left": 626,
+        "top": 350,
+        "width": 218,
+        "height": 206
+      }
+    },
+    "home-sponsored-03": {
+      "atlas": "sponsored",
+      "column": 3,
+      "row": 1,
+      "bounds": {
+        "left": 899,
+        "top": 365,
+        "width": 257,
+        "height": 186
+      }
+    },
+    "home-sponsored-04": {
+      "atlas": "sponsored",
+      "column": 4,
+      "row": 1,
+      "bounds": {
+        "left": 1234,
+        "top": 368,
+        "width": 187,
+        "height": 198
+      }
+    },
+    "home-sponsored-05": {
+      "atlas": "sponsored",
+      "column": 5,
+      "row": 1,
+      "bounds": {
+        "left": 1505,
+        "top": 324,
+        "width": 219,
+        "height": 245
+      }
+    },
+    "sport-organic-00": {
+      "atlas": "sport",
+      "column": 0,
+      "row": 0,
+      "bounds": {
+        "left": 3,
+        "top": 3,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "sport-organic-01": {
+      "atlas": "sport",
+      "column": 1,
+      "row": 0,
+      "bounds": {
+        "left": 284,
+        "top": 3,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "sport-organic-02": {
+      "atlas": "sport",
+      "column": 2,
+      "row": 0,
+      "bounds": {
+        "left": 564,
+        "top": 3,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "sport-organic-03": {
+      "atlas": "sport",
+      "column": 3,
+      "row": 0,
+      "bounds": {
+        "left": 845,
+        "top": 3,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "sport-organic-04": {
+      "atlas": "sport",
+      "column": 0,
+      "row": 1,
+      "bounds": {
+        "left": 3,
+        "top": 283,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "sport-organic-05": {
+      "atlas": "sport",
+      "column": 1,
+      "row": 1,
+      "bounds": {
+        "left": 284,
+        "top": 283,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "sport-organic-06": {
+      "atlas": "sport",
+      "column": 2,
+      "row": 1,
+      "bounds": {
+        "left": 564,
+        "top": 283,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "sport-organic-07": {
+      "atlas": "sport",
+      "column": 3,
+      "row": 1,
+      "bounds": {
+        "left": 845,
+        "top": 283,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "sport-organic-08": {
+      "atlas": "sport",
+      "column": 0,
+      "row": 2,
+      "bounds": {
+        "left": 3,
+        "top": 564,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "sport-organic-09": {
+      "atlas": "sport",
+      "column": 1,
+      "row": 2,
+      "bounds": {
+        "left": 284,
+        "top": 564,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "sport-organic-10": {
+      "atlas": "sport",
+      "column": 2,
+      "row": 2,
+      "bounds": {
+        "left": 564,
+        "top": 564,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "sport-organic-11": {
+      "atlas": "sport",
+      "column": 3,
+      "row": 2,
+      "bounds": {
+        "left": 845,
+        "top": 564,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "sport-organic-12": {
+      "atlas": "sport",
+      "column": 0,
+      "row": 3,
+      "bounds": {
+        "left": 3,
+        "top": 844,
+        "width": 274,
+        "height": 270
+      }
+    },
+    "sport-organic-13": {
+      "atlas": "sport",
+      "column": 1,
+      "row": 3,
+      "bounds": {
+        "left": 284,
+        "top": 844,
+        "width": 274,
+        "height": 272
+      }
+    },
+    "sport-organic-14": {
+      "atlas": "sport",
+      "column": 2,
+      "row": 3,
+      "bounds": {
+        "left": 564,
+        "top": 844,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "sport-organic-15": {
+      "atlas": "sport",
+      "column": 3,
+      "row": 3,
+      "bounds": {
+        "left": 845,
+        "top": 844,
+        "width": 274,
+        "height": 275
+      }
+    },
+    "sport-organic-16": {
+      "atlas": "sport",
+      "column": 0,
+      "row": 4,
+      "bounds": {
+        "left": 3,
+        "top": 1120,
+        "width": 274,
+        "height": 279
+      }
+    },
+    "sport-organic-17": {
+      "atlas": "sport",
+      "column": 1,
+      "row": 4,
+      "bounds": {
+        "left": 284,
+        "top": 1122,
+        "width": 274,
+        "height": 277
+      }
+    },
+    "sport-organic-18": {
+      "atlas": "sport",
+      "column": 2,
+      "row": 4,
+      "bounds": {
+        "left": 564,
+        "top": 1125,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "sport-organic-19": {
+      "atlas": "sport",
+      "column": 3,
+      "row": 4,
+      "bounds": {
+        "left": 845,
+        "top": 1125,
+        "width": 274,
+        "height": 274
+      }
+    },
+    "sport-sponsored-00": {
+      "atlas": "sponsored",
+      "column": 0,
+      "row": 2,
+      "bounds": {
+        "left": 26,
+        "top": 624,
+        "width": 266,
+        "height": 185
+      }
+    },
+    "sport-sponsored-01": {
+      "atlas": "sponsored",
+      "column": 1,
+      "row": 2,
+      "bounds": {
+        "left": 323,
+        "top": 607,
+        "width": 265,
+        "height": 217
+      }
+    },
+    "sport-sponsored-02": {
+      "atlas": "sponsored",
+      "column": 2,
+      "row": 2,
+      "bounds": {
+        "left": 682,
+        "top": 595,
+        "width": 113,
+        "height": 231
+      }
+    },
+    "sport-sponsored-03": {
+      "atlas": "sponsored",
+      "column": 3,
+      "row": 2,
+      "bounds": {
+        "left": 890,
+        "top": 595,
+        "width": 252,
+        "height": 237
+      }
+    },
+    "sport-sponsored-04": {
+      "atlas": "sponsored",
+      "column": 4,
+      "row": 2,
+      "bounds": {
+        "left": 1215,
+        "top": 595,
+        "width": 226,
+        "height": 238
+      }
+    },
+    "sport-sponsored-05": {
+      "atlas": "sponsored",
+      "column": 5,
+      "row": 2,
+      "bounds": {
+        "left": 1488,
+        "top": 631,
+        "width": 261,
+        "height": 183
+      }
+    }
+  }
+}

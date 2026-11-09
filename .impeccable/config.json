@@ -11,6 +11,24 @@
         ],
         "createdAt": "2026-10-26T00:15:55.261Z",
         "reason": "Agent reviewed rendered table: table-wrap intentionally contains a collapsed full-width table; th and td have 14px 16px padding, measured text inset is 17px left and 16px top. Mobile table scrolls within the wrapper without page overflow."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "avenir",
+        "files": [
+          "retail_media/report.html"
+        ],
+        "createdAt": "2026-10-31T03:12:59.576Z",
+        "reason": "Agent: preserved historical report predates the new Figtree application system; README identifies it as the previous experiment. Avenir remains intentionally confined to that historical template."
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "retail_media/web/index.html"
+        ],
+        "createdAt": "2026-10-31T03:12:59.625Z",
+        "reason": "Agent: rendered metric-strip verified at desktop/mobile. First metric and mobile third metric have computed border-left 0px when padding-left is 0px; actual visible dividers have 24px padding (16px responsive). Explicit border-left:0 resets remain. Analyzer misattributes inherited border-left despite reset; screenshot evidence is in .impeccable/review/final/screenshots and docs/lab-ui-audit.md."
       }
     ]
   }

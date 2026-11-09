@@ -1,4 +1,4 @@
-"""Ejecutar con python -m retail_media run | train | evaluate | campaign."""
+"""Comandos de entrenamiento, evaluación, campañas y laboratorio interactivo."""
 import argparse
 from dataclasses import replace
 import json
@@ -12,8 +12,8 @@ from .reporting import write_report
 
 
 def main():
-    parser = argparse.ArgumentParser(description='MVP de retail media RL con CPC')
-    parser.add_argument('command', choices=['run', 'train', 'evaluate', 'campaign'])
+    parser = argparse.ArgumentParser(description='Laboratorio de retail media: RL, CPC y simulación interactiva')
+    parser.add_argument('command', choices=['run', 'train', 'evaluate', 'campaign', 'lab', 'train-lab', 'evaluate-lab'])
     parser.add_argument('--config', type=Path)
     parser.add_argument('--episodes', type=int, default=120)
     parser.add_argument('--sessions', type=int, help='Sesiones por día/episodio')
@@ -25,8 +25,28 @@ def main():
     parser.add_argument('--campaign-seed', type=int, default=40000)
     parser.add_argument('--traffic-file', type=Path, help='JSON con una lista de sesiones por día; admite días con cero tráfico')
     parser.add_argument('--policy', choices=['rl', 'random', 'relevance', 'bid', 'rotation', 'organic'], default='rl', help='Política para campaign')
+    parser.add_argument('--port', type=int, default=8765, help='Puerto local para lab')
+    parser.add_argument('--lab-observations', type=int, default=600000)
+    parser.add_argument('--lab-sessions', type=int, default=1000)
+    parser.add_argument('--lab-runs', type=int, default=8)
     args = parser.parse_args()
     try:
+        if args.command == 'lab':
+            from .lab_server import serve
+            if not 1024 <= args.port <= 65535:
+                raise ValueError('El puerto debe estar entre 1024 y 65535')
+            serve(args.port)
+            return
+        if args.command in ('train-lab', 'evaluate-lab'):
+            from .lab_model import LabModel
+            from .lab_training import train_lab, evaluate_lab
+            if args.command == 'train-lab':
+                train_lab(output=args.artifacts / 'lab_model.npz', n=args.lab_observations)
+            else:
+                model = LabModel.load(args.artifacts / 'lab_model.npz')
+                evaluate_lab(model, output=args.reports / 'lab_evaluation.json',
+                             sessions=args.lab_sessions, seeds=range(80020, 80020 + args.lab_runs))
+            return
         config = load_config(args.config)
         if args.sessions is not None:
             config = replace(config, sessions=args.sessions).validate()
